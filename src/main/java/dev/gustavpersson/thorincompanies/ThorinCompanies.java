@@ -1,20 +1,45 @@
 package dev.gustavpersson.thorincompanies;
 
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import dev.gustavpersson.thorincompanies.commands.CompBalance;
+import net.milkbowl.vault.economy.Economy;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.maxgamer.quickshop.api.QuickShopAPI;
-import org.maxgamer.quickshop.api.shop.Shop;
+
+import java.util.logging.Logger;
 
 public final class ThorinCompanies extends JavaPlugin {
 
+    private static final Logger log = Logger.getLogger("Minecraft");
+    private static Economy economy = null;
+
     @Override
     public void onEnable() {
-        Plugin quickshopPlugin = Bukkit.getPluginManager().getPlugin("QuickShop");
-        if(quickshopPlugin != null && quickshopPlugin.isEnabled()){
-            QuickShopAPI quickshopApi = (QuickShopAPI)quickshopPlugin;
+
+        if (!setupEconomy() ) {
+            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
 
+        //Register commands
+        this.getCommand("compBalance").setExecutor(new CompBalance());
+
+    }
+
+    private boolean setupEconomy() {
+        if (getServer().getPluginManager().getPlugin("Vault") == null) {
+            return false;
+        }
+        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+        if (rsp == null) {
+            return false;
+        }
+        economy = rsp.getProvider();
+        return economy != null;
+    }
+
+    public static Economy getEconomy() {
+        return economy;
     }
 
     @Override
