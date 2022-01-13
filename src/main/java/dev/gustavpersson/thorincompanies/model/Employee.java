@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies;
+package dev.gustavpersson.thorincompanies.model;
 
 import org.bukkit.entity.Player;
 

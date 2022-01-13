@@ -1,6 +1,7 @@
 package dev.gustavpersson.thorincompanies.database;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
+import org.bukkit.Bukkit;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,11 +10,7 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private ThorinCompanies plugin;
-
-    public Database(ThorinCompanies _plugin) {
-        this.plugin = _plugin;
-    }
+    private static ThorinCompanies plugin;
 
     public static Connection getConnection() {
 
@@ -21,7 +18,7 @@ public class Database {
         try {
             connection = DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
         } catch(SQLException exception) {
-            plugin.getLogger().severe("There was an issue establishing the connection to the database.");
+            Bukkit.getLogger().severe("There was an issue establishing the connection to the database.");
         }
 
         return connection;
@@ -29,11 +26,23 @@ public class Database {
 
     public static void initializeDatabase() {
 
-        PreparedStatement preparedStatement;
+        String companiesTableQuery = """
+                    CREATE TABLE IF NOT EXISTS companies (
+                        id int NOT NULL AUTO_INCREMENT,
+                        name varchar(25),
+                        creationDate DATE DEFAULT CURRENT_DATE()
+                    )
+                    """;
+
         try {
-            preparedStatement = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS ")
+            PreparedStatement preparedStatement = getConnection().prepareStatement(companiesTableQuery);
+
+            preparedStatement.execute();
+
+            preparedStatement.close();
+
         } catch(SQLException exception) {
-            plugin.getLogger().severe("Not able to initialize database.");
+            Bukkit.getLogger().severe("Not able to initialize database.");
         }
 
     }
