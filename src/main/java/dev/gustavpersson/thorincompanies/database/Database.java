@@ -24,7 +24,6 @@ public class Database {
             Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
         } catch(SQLException | ClassNotFoundException exception) {
-            plugin.getLogger().severe(exception.toString());
             plugin.getLogger().severe("There was an issue establishing a connection to the database.");
         }
 
