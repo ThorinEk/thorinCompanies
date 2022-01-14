@@ -3,6 +3,7 @@ package dev.gustavpersson.thorincompanies.database;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 import org.bukkit.Bukkit;
 
+import javax.xml.crypto.Data;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,21 +11,27 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private static ThorinCompanies plugin;
+    private final ThorinCompanies plugin;
 
-    public static Connection getConnection() {
+    public Database(ThorinCompanies plugin) {
+        this.plugin = plugin;
+    }
+
+    public Connection getConnection() {
 
         Connection connection = null;
         try {
+            Class.forName("org.h2.Driver");
             connection = DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
-        } catch(SQLException exception) {
-            Bukkit.getLogger().severe("There was an issue establishing the connection to the database.");
+        } catch(SQLException | ClassNotFoundException exception) {
+            plugin.getLogger().severe(exception.toString());
+            plugin.getLogger().severe("There was an issue establishing a connection to the database.");
         }
 
         return connection;
     }
 
-    public static void initializeDatabase() {
+    public void initializeDatabase() {
 
         String companiesTableQuery = """
                     CREATE TABLE IF NOT EXISTS companies (
@@ -35,14 +42,17 @@ public class Database {
                     """;
 
         try {
-            PreparedStatement preparedStatement = getConnection().prepareStatement(companiesTableQuery);
+            Connection connection = getConnection();
+            PreparedStatement preparedStatement = connection.prepareStatement(companiesTableQuery);
 
             preparedStatement.execute();
 
             preparedStatement.close();
 
+            connection.close();
+
         } catch(SQLException exception) {
-            Bukkit.getLogger().severe("Not able to initialize database.");
+            plugin.getLogger().severe("Not able to initialize database.");
         }
 
     }
