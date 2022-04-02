@@ -11,5 +11,5 @@ softdepend:
   - QickShop
 
 commands:
-  compBalance:
-    description: Print the players economy in chat
+  comp:
+    description: Main command

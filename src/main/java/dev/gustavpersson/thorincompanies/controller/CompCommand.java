@@ -10,18 +10,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-public class CompBalance implements CommandExecutor {
+public class CompCommand implements CommandExecutor {
 
     private final ThorinCompanies plugin;
 
-    public CompBalance(ThorinCompanies _plugin){
-        plugin = _plugin;
+    private Database database;
+
+    public CompCommand(ThorinCompanies plugin){
+        this.plugin = plugin;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try{
+            database = new Database(plugin);
             Player player = (Player) sender;
 
             Economy economy = plugin.getEconomy();
@@ -34,6 +38,7 @@ public class CompBalance implements CommandExecutor {
             switch (args[0]) {
                 case "bal" -> player.sendMessage("Ditt konto: " + economy.getBalance(player));
                 case "create" -> createCommandHandler(player, args);
+                case "list" -> listCommandHandler(player, args);
 
                 default -> player.sendMessage("Invalido-argument");
             }
@@ -41,22 +46,36 @@ public class CompBalance implements CommandExecutor {
             return true;
 
         } catch (Exception exception){
+            exception.printStackTrace();
             Chat.sendMessage((Player) sender, exception.getMessage());
             return false;
         }
     }
 
     private void createCommandHandler(Player player, String[] args) throws Exception {
-        if (args[1].isEmpty()){
+        if (args.length < 2){
             Chat.sendMessage(player, "Du måste ange ett namn på företaget");
             return;
         }
 
-        Database database = new Database(plugin);
-
         PreparedStatement query = database.getConnection().prepareStatement(
                 "INSERT INTO companies (name) VALUES (?)");
-        query.setString(0, args[1]);
+        query.setString(1, args[1]);
         query.execute();
+
+        Chat.sendMessage(player, "Företaget " + args[1] + " skapades");
     }
+
+    private void listCommandHandler(Player player, String[] args) throws Exception {
+        PreparedStatement query = database.getConnection().prepareStatement("SELECT * FROM companies");
+
+        ResultSet companies = query.executeQuery();
+
+        Chat.sendMessage(player, "&2Företag:");
+
+        while(companies.next()){
+            Chat.sendMessage(player, companies.getString("name"));
+        }
+    }
+
 }

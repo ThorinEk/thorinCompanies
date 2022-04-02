@@ -1,6 +1,6 @@
 package dev.gustavpersson.thorincompanies;
 
-import dev.gustavpersson.thorincompanies.controller.CompBalance;
+import dev.gustavpersson.thorincompanies.controller.CompCommand;
 import dev.gustavpersson.thorincompanies.database.Database;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -20,7 +20,7 @@ public final class ThorinCompanies extends JavaPlugin {
         try {
             setupEconomy();
 
-            Objects.requireNonNull(this.getCommand("comp")).setExecutor(new CompBalance(this));
+            Objects.requireNonNull(this.getCommand("comp")).setExecutor(new CompCommand(this));
 
             Database database = new Database(this);
 

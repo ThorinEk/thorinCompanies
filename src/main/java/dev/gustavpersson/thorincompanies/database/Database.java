@@ -17,6 +17,7 @@ public class Database {
 
     public Connection getConnection() throws Exception {
         try {
+            Class.forName("org.h2.Driver");
             return DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
         } catch(SQLException exception) {
             throw new Exception("There was an issue establishing the connection to the database.");
@@ -25,9 +26,8 @@ public class Database {
 
     public void initializeDatabase() throws Exception {
 
-        PreparedStatement query;
         try {
-            query = getConnection().prepareStatement(
+            PreparedStatement query = getConnection().prepareStatement(
                 "CREATE TABLE IF NOT EXISTS companies (" +
                         "id int NOT NULL AUTO_INCREMENT," +
                         "name varchar(255) NOT NULL" +
