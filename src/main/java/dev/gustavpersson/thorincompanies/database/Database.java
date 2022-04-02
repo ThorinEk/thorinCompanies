@@ -9,31 +9,34 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private ThorinCompanies plugin;
+    private final ThorinCompanies plugin;
 
-    public Database(ThorinCompanies _plugin) {
-        this.plugin = _plugin;
+    public Database(ThorinCompanies plugin) {
+        this.plugin = plugin;
     }
 
-    public static Connection getConnection() {
-
-        Connection connection = null;
+    public Connection getConnection() throws Exception {
         try {
-            connection = DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
+            return DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
         } catch(SQLException exception) {
-            plugin.getLogger().severe("There was an issue establishing the connection to the database.");
+            throw new Exception("There was an issue establishing the connection to the database.");
         }
-
-        return connection;
     }
 
-    public static void initializeDatabase() {
+    public void initializeDatabase() throws Exception {
 
-        PreparedStatement preparedStatement;
+        PreparedStatement query;
         try {
-            preparedStatement = getConnection().prepareStatement("CREATE TABLE IF NOT EXISTS ")
-        } catch(SQLException exception) {
-            plugin.getLogger().severe("Not able to initialize database.");
+            query = getConnection().prepareStatement(
+                "CREATE TABLE IF NOT EXISTS companies (" +
+                        "id int NOT NULL AUTO_INCREMENT," +
+                        "name varchar(255) NOT NULL" +
+                    ")");
+
+            query.execute();
+
+        } catch(Exception exception) {
+            throw new Exception("Not able to initialize database.");
         }
 
     }

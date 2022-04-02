@@ -1,49 +1,56 @@
 package dev.gustavpersson.thorincompanies;
 
-import dev.gustavpersson.thorincompanies.commands.CompBalance;
+import dev.gustavpersson.thorincompanies.controller.CompBalance;
+import dev.gustavpersson.thorincompanies.database.Database;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
 import java.util.logging.Logger;
 
 public final class ThorinCompanies extends JavaPlugin {
 
-    private static final Logger log = Logger.getLogger("Minecraft");
-    private static Economy economy = null;
+    private final Logger logger = Logger.getLogger("Minecraft");
+    private Economy economy = null;
 
     @Override
     public void onEnable() {
 
-        if (!setupEconomy() ) {
-            log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
+        try {
+            setupEconomy();
 
-        //Register commands
-        this.getCommand("compBalance").setExecutor(new CompBalance());
+            Objects.requireNonNull(this.getCommand("comp")).setExecutor(new CompBalance(this));
+
+            Database database = new Database(this);
+
+            database.initializeDatabase();
+
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+        }
 
     }
 
-    private boolean setupEconomy() {
+    private void setupEconomy() throws Exception {
         if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
+            throw new Exception("Vault plugin not found");
         }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
+
+        RegisteredServiceProvider<Economy> economyServiceProvider = getServer().getServicesManager().getRegistration(Economy.class);
+        if (economyServiceProvider == null) {
+            throw new Exception("No economy service provider found");
         }
-        economy = rsp.getProvider();
-        return economy != null;
+        economy = economyServiceProvider.getProvider();
     }
 
-    public static Economy getEconomy() {
+    public Economy getEconomy() {
         return economy;
     }
 
     @Override
     public void onDisable() {
+        super.onDisable();
         // Plugin shutdown logic
     }
 }
