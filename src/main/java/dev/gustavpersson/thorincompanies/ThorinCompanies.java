@@ -17,8 +17,22 @@ public final class ThorinCompanies extends JavaPlugin {
 
     private final Logger logger = Logger.getLogger("Minecraft");
     private Economy economy;
+
     File messageFile = new File(getDataFolder(), "messages.yml");
     FileConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageFile);
+
+    File configFile = new File(getDataFolder(), "config.yml");
+    FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
+
+    public Economy getEconomy() {
+        return economy;
+    }
+
+    public FileConfiguration getMessagesConfig() { return messagesConfig; }
+
+    public File getMessageFile() { return messageFile; }
+
+    public File getConfigFile() { return configFile; }
 
     @Override
     public void onEnable() {
@@ -26,13 +40,15 @@ public final class ThorinCompanies extends JavaPlugin {
         try {
             setupEconomy();
 
-            getConfig().options().copyDefaults();
-            saveDefaultConfig();
-
             if (!messageFile.exists()){
                 saveResource("messages.yml", false);
-                Config.populateMessagesFile(this);
             }
+            Config.populateMessagesFile(this);
+
+            if (!configFile.exists()){
+                saveResource("config.yml", false);
+            }
+            Config.populateConfigFile(this);
 
             Database database = new Database(this);
 
@@ -58,17 +74,15 @@ public final class ThorinCompanies extends JavaPlugin {
         economy = economyServiceProvider.getProvider();
     }
 
-    public Economy getEconomy() {
-        return economy;
-    }
-
-    public FileConfiguration getMessagesConfig() { return messagesConfig; }
-
-    public File getMessageFile() { return messageFile; }
-
     @Override
     public void onDisable() {
         super.onDisable();
         // Plugin shutdown logic
     }
+
+    @Override
+    public FileConfiguration getConfig(){
+        return config;
+    }
+
 }
