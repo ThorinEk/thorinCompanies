@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.database;
+package dev.gustavpersson.thorincompanies.data_access_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 
@@ -30,7 +30,8 @@ public class Database {
             PreparedStatement query = getConnection().prepareStatement(
                 "CREATE TABLE IF NOT EXISTS companies (" +
                         "id int NOT NULL AUTO_INCREMENT," +
-                        "name varchar(255) NOT NULL" +
+                        "name char(36) NOT NULL," +
+                        "createdAt date NOT NULL" +
                     ")");
 
             query.execute();

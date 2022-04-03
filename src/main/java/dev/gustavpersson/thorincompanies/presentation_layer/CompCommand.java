@@ -1,25 +1,35 @@
-package dev.gustavpersson.thorincompanies.controller;
+package dev.gustavpersson.thorincompanies.presentation_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import dev.gustavpersson.thorincompanies.database.Database;
-import dev.gustavpersson.thorincompanies.model.Chat;
+import dev.gustavpersson.thorincompanies.business_logic_layer.Arguments;
+import dev.gustavpersson.thorincompanies.data_access_layer.Database;
+import dev.gustavpersson.thorincompanies.business_logic_layer.Chat;
+import dev.gustavpersson.thorincompanies.business_logic_layer.Company;
+import dev.gustavpersson.thorincompanies.data_access_layer.CompanyRepository;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-public class CompCommand implements CommandExecutor {
+public class CompCommand implements TabExecutor {
 
     private final ThorinCompanies plugin;
 
     private Database database;
 
+    CompanyRepository companyRepository;
+
     public CompCommand(ThorinCompanies plugin){
         this.plugin = plugin;
+        this.companyRepository = new CompanyRepository(plugin);
     }
 
     @Override
@@ -58,10 +68,11 @@ public class CompCommand implements CommandExecutor {
             return;
         }
 
-        PreparedStatement query = database.getConnection().prepareStatement(
-                "INSERT INTO companies (name) VALUES (?)");
-        query.setString(1, args[1]);
-        query.execute();
+        Company company = new Company();
+        company.setName(args[1]);
+        company.setOwnerUuid(player.getUniqueId().toString());
+
+        companyRepository.createCompany(company);
 
         Chat.sendMessage(player, "Företaget " + args[1] + " skapades");
     }
@@ -74,8 +85,16 @@ public class CompCommand implements CommandExecutor {
         Chat.sendMessage(player, "&2Företag:");
 
         while(companies.next()){
-            Chat.sendMessage(player, companies.getString("name"));
+            Chat.sendMessage(player, companies.getString("name") + ", Grundat " + companies.getDate("createdAt").toString());
         }
     }
 
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
+        if (args.length == 1){
+            return new ArrayList<>(Arrays.asList(Arguments.CREATE, Arguments.LIST, Arguments.BAL));
+        }
+
+        return Collections.emptyList();
+    }
 }
