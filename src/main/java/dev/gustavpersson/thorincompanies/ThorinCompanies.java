@@ -1,6 +1,6 @@
 package dev.gustavpersson.thorincompanies;
 
-import dev.gustavpersson.thorincompanies.business_logic_layer.Config;
+import dev.gustavpersson.thorincompanies.business_logic_layer.ConfigManager;
 import dev.gustavpersson.thorincompanies.presentation_layer.CompCommand;
 import dev.gustavpersson.thorincompanies.data_access_layer.Database;
 import net.milkbowl.vault.economy.Economy;
@@ -43,12 +43,12 @@ public final class ThorinCompanies extends JavaPlugin {
             if (!messageFile.exists()){
                 saveResource("messages.yml", false);
             }
-            Config.populateMessagesFile(this);
+            ConfigManager.populateMessagesFile(this);
 
             if (!configFile.exists()){
                 saveResource("config.yml", false);
             }
-            Config.populateConfigFile(this);
+            ConfigManager.populateConfigFile(this);
 
             Database database = new Database(this);
 
