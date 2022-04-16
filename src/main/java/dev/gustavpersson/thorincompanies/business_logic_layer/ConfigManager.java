@@ -21,6 +21,7 @@ public class ConfigManager {
         {
             put(MessageKeys.COMPANY_CREATED, "Company %s created");
             put(MessageKeys.COMPANY_BALANCE, "Company balance: %s");
+            put(MessageKeys.EXCEPTION_OCCURRED, "&CAn unexpected exception occurred with ThorinCompanies");
         }
     };
 

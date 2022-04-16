@@ -3,7 +3,6 @@ package dev.gustavpersson.thorincompanies.data_access_layer;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 import dev.gustavpersson.thorincompanies.business_logic_layer.Company;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 
 public class CompanyRepository {
@@ -15,13 +14,11 @@ public class CompanyRepository {
     }
 
     public void createCompany(Company company) throws Exception {
-        Date date = new Date(System.currentTimeMillis());
-
         PreparedStatement query = database.getConnection().prepareStatement(
                 "INSERT INTO companies (name, ownerUuid, createdAt) VALUES (?, ?, ?)");
         query.setString(1, company.getName());
         query.setString(2, company.getOwnerUuid());
-        query.setDate(3, date);
+        query.setDate(3, company.getCreatedAt());
         query.execute();
     }
 

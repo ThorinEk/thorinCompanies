@@ -8,7 +8,6 @@ public class Company {
     private String name;
     private String ownerUuid;
     private Date createdAt;
-
     public List<Employee> employees;
 
     public int getId() {
@@ -23,9 +22,7 @@ public class Company {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setName(String name) {this.name = name; }
 
     public String getOwnerUuid() {
         return ownerUuid;

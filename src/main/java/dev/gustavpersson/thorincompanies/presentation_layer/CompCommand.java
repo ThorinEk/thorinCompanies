@@ -1,11 +1,8 @@
 package dev.gustavpersson.thorincompanies.presentation_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import dev.gustavpersson.thorincompanies.business_logic_layer.Arguments;
+import dev.gustavpersson.thorincompanies.business_logic_layer.*;
 import dev.gustavpersson.thorincompanies.data_access_layer.Database;
-import dev.gustavpersson.thorincompanies.business_logic_layer.Chat;
-import dev.gustavpersson.thorincompanies.business_logic_layer.Company;
-import dev.gustavpersson.thorincompanies.data_access_layer.CompanyRepository;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -14,10 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class CompCommand implements TabExecutor {
 
@@ -25,11 +19,11 @@ public class CompCommand implements TabExecutor {
 
     private Database database;
 
-    CompanyRepository companyRepository;
+    CompanyManager companyManager;
 
     public CompCommand(ThorinCompanies plugin){
         this.plugin = plugin;
-        this.companyRepository = new CompanyRepository(plugin);
+        this.companyManager = new CompanyManager(plugin);
     }
 
     @Override
@@ -50,14 +44,19 @@ public class CompCommand implements TabExecutor {
                 case "create" -> createCommandHandler(player, args);
                 case "list" -> listCommandHandler(player, args);
 
-                default -> player.sendMessage("Invalido-argument");
+                default -> player.sendMessage(Objects.requireNonNull(plugin.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT)));
             }
 
             return true;
 
         } catch (Exception exception){
-            exception.printStackTrace();
-            Chat.sendMessage((Player) sender, exception.getMessage());
+            if (exception instanceof ThorinException){
+                Chat.sendMessage((Player) sender, exception.toString());
+            } else {
+                plugin.getLogger().severe(exception.toString());
+                exception.printStackTrace();
+                Chat.sendMessage((Player) sender, plugin.getMessagesConfig().getString(MessageKeys.EXCEPTION_OCCURRED));
+            }
             return false;
         }
     }
@@ -72,7 +71,7 @@ public class CompCommand implements TabExecutor {
         company.setName(args[1]);
         company.setOwnerUuid(player.getUniqueId().toString());
 
-        companyRepository.createCompany(company);
+        companyManager.createCompany(company);
 
         Chat.sendMessage(player, "Företaget " + args[1] + " skapades");
     }
