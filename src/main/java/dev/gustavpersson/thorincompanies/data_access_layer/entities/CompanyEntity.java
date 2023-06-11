@@ -9,13 +9,28 @@ import java.util.UUID;
 public class CompanyEntity {
 
     @DatabaseField(generatedId = true)
-    private int id;
+    public int id;
 
     @DatabaseField()
-    private String name;
+    public String name;
 
     //The original founder
     @DatabaseField()
-    private UUID founderUUID;
+    public UUID founderUUID;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public UUID getFounderUUID() {
+        return founderUUID;
+    }
+
+    public void setFounderUUID(UUID founderUUID) {
+        this.founderUUID = founderUUID;
+    }
 }

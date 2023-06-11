@@ -2,27 +2,25 @@ package dev.gustavpersson.thorincompanies.presentation_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 import dev.gustavpersson.thorincompanies.business_logic_layer.*;
-import dev.gustavpersson.thorincompanies.data_access_layer.Database;
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
+import dev.gustavpersson.thorincompanies.data_access_layer.Database;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public class CompCommand implements TabExecutor {
 
     private final ThorinCompanies plugin;
 
-    private Database database;
-
     CompanyManager companyManager;
 
-    public CompCommand(ThorinCompanies plugin){
+    public CompCommand(ThorinCompanies plugin) throws SQLException {
         this.plugin = plugin;
         this.companyManager = new CompanyManager(plugin);
     }
@@ -30,20 +28,19 @@ public class CompCommand implements TabExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         try{
-            database = new Database(plugin);
             Player player = (Player) sender;
 
             Economy economy = plugin.getEconomy();
 
             if (args.length == 0) {
-                player.sendMessage("ThorinTime plugin by ThorinEk");
+                player.sendMessage("Base-command for the ThorinCompanies plugin by ThorinEk");
                 return true;
             }
 
             switch (args[0]) {
                 case "bal" -> player.sendMessage("Ditt konto: " + economy.getBalance(player));
-                case "create" -> createCommandHandler(player, args);
-                case "list" -> listCommandHandler(player, args);
+                case "create" -> createCompanyHandler(player, args);
+                case "list" -> listCompaniesHandler(player, args);
 
                 default -> player.sendMessage(Objects.requireNonNull(plugin.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT)));
             }
@@ -62,30 +59,26 @@ public class CompCommand implements TabExecutor {
         }
     }
 
-    private void createCommandHandler(Player player, String[] args) throws Exception {
+    private void createCompanyHandler(Player player, String[] args) throws Exception {
         if (args.length < 2){
             Chat.sendMessage(player, "Du måste ange ett namn på företaget");
             return;
         }
+        String companyName = args[1];
 
-        Company company = new Company();
-        company.setName(args[1]);
-        company.setOwnerUuid(player.getUniqueId().toString());
-
-        companyManager.createCompany(company);
+        companyManager.createCompany(player, companyName);
 
         Chat.sendMessage(player, "Företaget " + args[1] + " skapades");
     }
 
-    private void listCommandHandler(Player player, String[] args) throws Exception {
-        PreparedStatement query = database.getConnection().prepareStatement("SELECT * FROM companies");
+    private void listCompaniesHandler(Player player, String[] args) throws Exception {
 
-        ResultSet companies = query.executeQuery();
+        List<Company> companies = companyManager.getAllCompanies();
 
         Chat.sendMessage(player, "&2Företag:");
 
-        while(companies.next()){
-            Chat.sendMessage(player, companies.getString("name") + ", Grundat " + companies.getDate("createdAt").toString());
+        for (Company company : companies) {
+            Chat.sendMessage(player, company.getName() + ", Grundat " + company.getCreatedAt().toString() + " av " + Bukkit.getOfflinePlayer(company.getFounderUUID()));
         }
     }
 

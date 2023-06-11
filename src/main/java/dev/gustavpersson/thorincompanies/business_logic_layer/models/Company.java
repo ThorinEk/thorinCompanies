@@ -1,43 +1,36 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.models;
 
+import com.j256.ormlite.field.DatabaseField;
+
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class Company {
-    private int id;
-    private String name;
-    private String ownerUuid;
+
+    public int id;
+
+    //The display name for the company
+    public String name;
+
+    //The original founder
+    public UUID founderUUID;
     private Date createdAt;
-    public List<Employee> employees;
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {this.name = name; }
-
-    public String getOwnerUuid() {
-        return ownerUuid;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setOwnerUuid(String ownerUuid) {
-        this.ownerUuid = ownerUuid;
+    public UUID getFounderUUID() {
+        return founderUUID;
     }
 
-    public List<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(List<Employee> employees) {
-        this.employees = employees;
+    public void setFounderUUID(UUID founderUUID) {
+        this.founderUUID = founderUUID;
     }
 
     public Date getCreatedAt() {
@@ -47,4 +40,5 @@ public class Company {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
 }
