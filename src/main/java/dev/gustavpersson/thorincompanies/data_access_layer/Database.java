@@ -1,12 +1,23 @@
 package dev.gustavpersson.thorincompanies.data_access_layer;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.table.TableUtils;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity;
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.EmployeeEntity;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class Database {
+
+    private static String databaseUrl = "jdbc:mysql://root@localhost/thorincompanies";
+
+    private JdbcConnectionSource connectionSource;
 
     private final ThorinCompanies plugin;
 
@@ -14,20 +25,18 @@ public class Database {
         this.plugin = plugin;
     }
 
-    public Connection getConnection() throws Exception {
-        Class.forName("org.h2.Driver");
-        return DriverManager.getConnection("jdbc:h2:" + plugin.getDataFolder().getAbsolutePath() + "/data/companies");
+    public <T, ID> Dao<T, ID> getDao(Class<T> clazz) throws SQLException {
+        Dao<T, ID> dao = DaoManager.lookupDao(connectionSource, clazz);
+        if (dao == null) {
+            dao = DaoManager.createDao(connectionSource, clazz);
+        }
+        return dao;
     }
 
     public void initializeDatabase() throws Exception {
-        PreparedStatement query = getConnection().prepareStatement(
-            "CREATE TABLE IF NOT EXISTS companies (" +
-                    "id int NOT NULL AUTO_INCREMENT," +
-                    "name char(36) NOT NULL," +
-                    "createdAt date NOT NULL" +
-                ")");
-
-        query.execute();
+        connectionSource = new JdbcConnectionSource(databaseUrl);
+        Dao<CompanyEntity, Integer> companyDao = DaoManager.createDao(connectionSource, CompanyEntity.class);
+        TableUtils.createTableIfNotExists(connectionSource, CompanyEntity.class);
 
     }
 

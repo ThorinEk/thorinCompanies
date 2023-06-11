@@ -1,7 +1,8 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import dev.gustavpersson.thorincompanies.data_access_layer.CompanyRepository;
+import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository;
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
 
 import java.sql.Date;
 

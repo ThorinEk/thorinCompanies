@@ -3,6 +3,7 @@ package dev.gustavpersson.thorincompanies.presentation_layer;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 import dev.gustavpersson.thorincompanies.business_logic_layer.*;
 import dev.gustavpersson.thorincompanies.data_access_layer.Database;
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
