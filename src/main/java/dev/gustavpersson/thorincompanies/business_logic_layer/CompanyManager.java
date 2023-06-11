@@ -18,7 +18,7 @@ public class CompanyManager {
 
     private final ModelMapper modelMapper;
 
-    public CompanyManager(ThorinCompanies plugin) throws SQLException {
+    public CompanyManager(ThorinCompanies plugin) throws SQLException, Exception {
         this.companyRepository = new CompanyRepository(plugin);
         this.modelMapper = new ModelMapper();
     }

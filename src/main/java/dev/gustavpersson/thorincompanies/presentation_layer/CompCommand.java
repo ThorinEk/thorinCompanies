@@ -3,7 +3,6 @@ package dev.gustavpersson.thorincompanies.presentation_layer;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
 import dev.gustavpersson.thorincompanies.business_logic_layer.*;
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
-import dev.gustavpersson.thorincompanies.data_access_layer.Database;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -20,7 +19,7 @@ public class CompCommand implements TabExecutor {
 
     CompanyManager companyManager;
 
-    public CompCommand(ThorinCompanies plugin) throws SQLException {
+    public CompCommand(ThorinCompanies plugin) throws SQLException, Exception {
         this.plugin = plugin;
         this.companyManager = new CompanyManager(plugin);
     }

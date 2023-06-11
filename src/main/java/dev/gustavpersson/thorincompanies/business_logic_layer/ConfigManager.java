@@ -1,20 +1,21 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer;
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import java.io.IOException;
+import org.bukkit.configuration.file.FileConfiguration;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ConfigManager {
 
-    public static void populateMessagesFile(ThorinCompanies plugin) throws IOException {
-
+    public void populateMessagesFile() {
+        FileConfiguration messagesConfig = ThorinCompanies.getMessagesConfig();
         for (Map.Entry<String, String> message : messages.entrySet()){
-            if (!plugin.getMessagesConfig().contains(message.getKey())){
-                plugin.getMessagesConfig().set(message.getKey(), message.getValue());
+            if (!messagesConfig.contains(message.getKey())){
+                messagesConfig.set(message.getKey(), message.getValue());
             }
         }
-        plugin.getMessagesConfig().save(plugin.getMessageFile());
+        ThorinCompanies.saveMessagesConfig();
     }
 
     private static final HashMap<String, String> messages = new HashMap<>() {
@@ -25,14 +26,14 @@ public class ConfigManager {
         }
     };
 
-    public static void populateConfigFile(ThorinCompanies plugin) throws IOException {
-
+    public void populateConfigFile() {
+        FileConfiguration config = ThorinCompanies.getPluginConfig();
         for (Map.Entry<String, Object> property : configProperties.entrySet()){
-            if (!plugin.getConfig().contains(property.getKey())){
-                plugin.getConfig().set(property.getKey(), property.getValue());
+            if (!config.contains(property.getKey())){
+                config.set(property.getKey(), property.getValue());
             }
         }
-        plugin.getConfig().save(plugin.getConfigFile());
+        ThorinCompanies.savePluginConfig();
     }
 
     private static final HashMap<String, Object> configProperties = new HashMap<>() {

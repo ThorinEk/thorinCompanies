@@ -3,14 +3,12 @@ package dev.gustavpersson.thorincompanies.data_access_layer;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
-import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import dev.gustavpersson.thorincompanies.ThorinCompanies;
+import dev.gustavpersson.thorincompanies.business_logic_layer.ThorinException;
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity;
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.EmployeeEntity;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class Database {
@@ -21,7 +19,11 @@ public class Database {
 
     private final ThorinCompanies plugin;
 
-    public Database(ThorinCompanies plugin) {
+    public Database(ThorinCompanies plugin) throws Exception {
+        connectionSource = new JdbcConnectionSource(databaseUrl);
+        if (connectionSource == null){
+            throw new Exception("Connection to database could not be established, please check your database configuration properties.");
+        }
         this.plugin = plugin;
     }
 
@@ -33,11 +35,9 @@ public class Database {
         return dao;
     }
 
-    public void initializeDatabase() throws Exception {
-        connectionSource = new JdbcConnectionSource(databaseUrl);
-        Dao<CompanyEntity, Integer> companyDao = DaoManager.createDao(connectionSource, CompanyEntity.class);
+    public void createTables() throws Exception {
         TableUtils.createTableIfNotExists(connectionSource, CompanyEntity.class);
-
+        TableUtils.createTableIfNotExists(connectionSource, EmployeeEntity.class);
     }
 
 }

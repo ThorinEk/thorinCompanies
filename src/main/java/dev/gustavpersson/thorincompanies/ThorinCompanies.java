@@ -1,58 +1,48 @@
 package dev.gustavpersson.thorincompanies;
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.ConfigManager;
+import dev.gustavpersson.thorincompanies.business_logic_layer.ThorinException;
 import dev.gustavpersson.thorincompanies.presentation_layer.CompCommand;
 import dev.gustavpersson.thorincompanies.data_access_layer.Database;
 import net.milkbowl.vault.economy.Economy;
+import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Logger;
 
-public final class ThorinCompanies extends JavaPlugin {
+public class ThorinCompanies extends JavaPlugin {
 
+    private static ThorinCompanies instance;
     private final Logger logger = Logger.getLogger("Minecraft");
     private Economy economy;
 
-    File messageFile = new File(getDataFolder(), "messages.yml");
-    FileConfiguration messagesConfig = YamlConfiguration.loadConfiguration(messageFile);
-
-    File configFile = new File(getDataFolder(), "config.yml");
-    FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
-
-    public Economy getEconomy() {
-        return economy;
-    }
-
-    public FileConfiguration getMessagesConfig() { return messagesConfig; }
-
-    public File getMessageFile() { return messageFile; }
-
-    public File getConfigFile() { return configFile; }
+    private File messagesFile;
+    private FileConfiguration messagesConfig;
 
     @Override
     public void onEnable() {
-
         try {
+            instance = this;
+
+            saveDefaultConfig();
+
+            createMessagesFile();
+
+            ConfigManager configManager = new ConfigManager();
+            configManager.populateConfigFile();
+            configManager.populateMessagesFile();
+
             setupEconomy();
-
-            if (!messageFile.exists()){
-                saveResource("messages.yml", false);
-            }
-            ConfigManager.populateMessagesFile(this);
-
-            if (!configFile.exists()){
-                saveResource("config.yml", false);
-            }
-            ConfigManager.populateConfigFile(this);
 
             Database database = new Database(this);
 
-            database.initializeDatabase();
+            database.createTables();
 
             Objects.requireNonNull(this.getCommand("comp")).setExecutor(new CompCommand(this));
 
@@ -60,6 +50,13 @@ public final class ThorinCompanies extends JavaPlugin {
             logger.severe(e.getMessage());
         }
 
+
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        // Plugin shutdown logic
     }
 
     private void setupEconomy() throws Exception {
@@ -74,15 +71,43 @@ public final class ThorinCompanies extends JavaPlugin {
         economy = economyServiceProvider.getProvider();
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
-        // Plugin shutdown logic
+    public Economy getEconomy() {
+        return economy;
     }
 
-    @Override
-    public FileConfiguration getConfig(){
-        return config;
+    public static FileConfiguration getPluginConfig() {
+        return instance.getConfig();
+    }
+
+    public static void savePluginConfig() {
+        instance.saveConfig();
+    }
+
+    private void createMessagesFile() {
+        messagesFile = new File(getDataFolder(), "messages.yml");
+        if (!messagesFile.exists()) {
+            messagesFile.getParentFile().mkdirs();
+            saveResource("messages.yml", false);
+        }
+
+        messagesConfig = new YamlConfiguration();
+        try {
+            messagesConfig.load(messagesFile);
+        } catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static FileConfiguration getMessagesConfig() {
+        return instance.messagesConfig;
+    }
+
+    public static void saveMessagesConfig() {
+        try {
+            instance.messagesConfig.save(instance.messagesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
