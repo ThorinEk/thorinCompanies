@@ -10,7 +10,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import java.sql.SQLException;
 import java.util.*;
 
 public class CompCommand implements TabExecutor {
@@ -19,7 +18,7 @@ public class CompCommand implements TabExecutor {
 
     CompanyManager companyManager;
 
-    public CompCommand(ThorinCompanies plugin) throws SQLException, Exception {
+    public CompCommand(ThorinCompanies plugin) throws Exception {
         this.plugin = plugin;
         this.companyManager = new CompanyManager(plugin);
     }
@@ -41,7 +40,7 @@ public class CompCommand implements TabExecutor {
                 case "create" -> createCompanyHandler(player, args);
                 case "list" -> listCompaniesHandler(player, args);
 
-                default -> player.sendMessage(Objects.requireNonNull(plugin.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT)));
+                default -> player.sendMessage(Objects.requireNonNull(ThorinCompanies.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT)));
             }
 
             return true;
@@ -52,7 +51,7 @@ public class CompCommand implements TabExecutor {
             } else {
                 plugin.getLogger().severe(exception.toString());
                 exception.printStackTrace();
-                Chat.sendMessage((Player) sender, plugin.getMessagesConfig().getString(MessageKeys.EXCEPTION_OCCURRED));
+                Chat.sendMessage((Player) sender, ThorinCompanies.getMessagesConfig().getString(MessageKeys.EXCEPTION_OCCURRED));
             }
             return false;
         }
