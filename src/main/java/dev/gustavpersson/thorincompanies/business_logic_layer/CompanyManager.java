@@ -7,7 +7,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
 import org.bukkit.entity.Player;
 import org.modelmapper.ModelMapper;
 
-import java.sql.Date;
+import java.util.Date;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,7 +28,7 @@ public class CompanyManager {
         Company company = new Company();
         company.setName(name);
         company.setFounderUUID(founder.getUniqueId());
-        company.setCreatedAt(new Date(System.currentTimeMillis()));
+        company.setCreatedAt(new Date());
 
         CompanyEntity companyEntity = modelMapper.map(company, CompanyEntity.class);
 

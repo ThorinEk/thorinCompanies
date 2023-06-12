@@ -1,9 +1,6 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.models;
 
-import com.j256.ormlite.field.DatabaseField;
-
-import java.sql.Date;
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
 public class Company {

@@ -76,7 +76,7 @@ public class CompCommand implements TabExecutor {
         Chat.sendMessage(player, "&2Företag:");
 
         for (Company company : companies) {
-            Chat.sendMessage(player, company.getName() + ", Grundat " + company.getCreatedAt().toString() + " av " + Bukkit.getOfflinePlayer(company.getFounderUUID()));
+            Chat.sendMessage(player, company.getName() + ", Grundat " + company.getCreatedAt().toString() + " av " + Bukkit.getOfflinePlayer(company.getFounderUUID()).getName());
         }
     }
 
