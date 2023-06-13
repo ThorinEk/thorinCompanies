@@ -1,14 +1,23 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.models
 
+import dev.gustavpersson.thorincompanies.data_access_layer.data_access_objects.CompanyEntity
+import org.joda.time.DateTime
 import java.util.*
 
-class Company {
-    var id = 0
-
-    //The display name for the company
-    var name: String? = null
-
-    //The original founder
-    var founderUUID: UUID? = null
-    var createdAt: Date? = null
+data class Company(
+    val id: Int,
+    val name: String,
+    val founderUUID: UUID,
+    val createdAt: DateTime
+) {
+    companion object {
+        fun fromEntity(entity: CompanyEntity): Company {
+            return Company(
+                id = entity.id,
+                name = entity.name,
+                founderUUID = entity.founderUUID,
+                createdAt = entity.createdAt
+            )
+        }
+    }
 }

@@ -2,7 +2,6 @@ package dev.gustavpersson.thorincompanies.presentation_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.*
-import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -55,7 +54,7 @@ class CompCommand(private val plugin: ThorinCompanies) : TabExecutor {
         val companies = companyManager.allCompanies
         Chat.sendMessage(player, "&2Företag:")
         for (company in companies) {
-            Chat.sendMessage(player, "${company.name}, Grundat ${company.createdAt} av ${company.founderUUID?.let { Bukkit.getOfflinePlayer(it).name }}")
+            Chat.sendMessage(player, "${company.name}, Grundat ${company.createdAt} av ${company.founderUUID?.name }}")
         }
     }
 

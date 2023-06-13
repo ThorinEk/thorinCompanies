@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.data_access_layer.entities
+package dev.gustavpersson.thorincompanies.data_access_layer.data_access_objects
 
 import com.j256.ormlite.field.DatabaseField
 import com.j256.ormlite.table.DatabaseTable
