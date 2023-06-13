@@ -1,113 +1,94 @@
-package dev.gustavpersson.thorincompanies;
+package dev.gustavpersson.thorincompanies
 
-import dev.gustavpersson.thorincompanies.business_logic_layer.ConfigManager;
-import dev.gustavpersson.thorincompanies.business_logic_layer.ThorinException;
-import dev.gustavpersson.thorincompanies.presentation_layer.CompCommand;
-import dev.gustavpersson.thorincompanies.data_access_layer.Database;
-import net.milkbowl.vault.economy.Economy;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.plugin.RegisteredServiceProvider;
-import org.bukkit.plugin.java.JavaPlugin;
+import dev.gustavpersson.thorincompanies.business_logic_layer.ConfigManager
+import dev.gustavpersson.thorincompanies.data_access_layer.Database
+import dev.gustavpersson.thorincompanies.presentation_layer.CompCommand
+import net.milkbowl.vault.economy.Economy
+import org.bukkit.configuration.InvalidConfigurationException
+import org.bukkit.configuration.file.FileConfiguration
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
+import java.io.IOException
+import java.util.logging.Logger
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-import java.util.logging.Logger;
+class ThorinCompanies : JavaPlugin() {
 
-public class ThorinCompanies extends JavaPlugin {
+    private val logger = Logger.getLogger("Minecraft")
 
-    private static ThorinCompanies instance;
-    private final Logger logger = Logger.getLogger("Minecraft");
-    private Economy economy;
-
-    private File messagesFile;
-    private FileConfiguration messagesConfig;
-
-    @Override
-    public void onEnable() {
+    lateinit var economy: Economy
+    lateinit var messagesConfig: FileConfiguration
+    private lateinit var messagesFile: File
+    override fun onEnable() {
         try {
-            instance = this;
-
-            saveDefaultConfig();
-
-            createMessagesFile();
-
-            ConfigManager configManager = new ConfigManager();
-            configManager.populateConfigFile();
-            configManager.populateMessagesFile();
-
-            setupEconomy();
-
-            Database database = new Database(this);
-
-            database.createTables();
-
-            Objects.requireNonNull(this.getCommand("comp")).setExecutor(new CompCommand(this));
-
-        } catch (Exception e) {
-            logger.severe(e.getMessage());
+            saveDefaultConfig()
+            createMessagesFile()
+            ConfigManager().apply {
+                populateConfigFile()
+                populateMessagesFile()
+            }
+            setupEconomy()
+            Database(this).apply { createTables() }
+            getCommand("comp")?.setExecutor(CompCommand(this))
+        } catch (e: Exception) {
+            logger.severe(e.message)
         }
-
-
     }
 
-    @Override
-    public void onDisable() {
-        super.onDisable();
+    override fun onDisable() {
+        super.onDisable()
         // Plugin shutdown logic
     }
 
-    private void setupEconomy() throws Exception {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            throw new Exception("Vault plugin not found");
+    private fun setupEconomy() {
+        if (server.pluginManager.getPlugin("Vault") == null) {
+            throw Exception("Vault plugin not found")
         }
+        val economyServiceProvider = server.servicesManager.getRegistration(Economy::class.java)
+                ?: throw Exception("No economy service provider found")
+        economy = economyServiceProvider.provider
+    }
 
-        RegisteredServiceProvider<Economy> economyServiceProvider = getServer().getServicesManager().getRegistration(Economy.class);
-        if (economyServiceProvider == null) {
-            throw new Exception("No economy service provider found");
+    private fun createMessagesFile() {
+        messagesFile = File(dataFolder, "messages.yml").apply {
+            if (!exists()) {
+                parentFile.mkdirs()
+                saveResource("messages.yml", false)
+            }
         }
-        economy = economyServiceProvider.getProvider();
-    }
-
-    public Economy getEconomy() {
-        return economy;
-    }
-
-    public static FileConfiguration getPluginConfig() {
-        return instance.getConfig();
-    }
-
-    public static void savePluginConfig() {
-        instance.saveConfig();
-    }
-
-    private void createMessagesFile() {
-        messagesFile = new File(getDataFolder(), "messages.yml");
-        if (!messagesFile.exists()) {
-            messagesFile.getParentFile().mkdirs();
-            saveResource("messages.yml", false);
-        }
-
-        messagesConfig = new YamlConfiguration();
-        try {
-            messagesConfig.load(messagesFile);
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+        messagesConfig = YamlConfiguration().apply {
+            try {
+                load(messagesFile)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: InvalidConfigurationException) {
+                e.printStackTrace()
+            }
         }
     }
 
-    public static FileConfiguration getMessagesConfig() {
-        return instance.messagesConfig;
-    }
+    companion object {
+        lateinit var instance: ThorinCompanies
 
-    public static void saveMessagesConfig() {
-        try {
-            instance.messagesConfig.save(instance.messagesFile);
-        } catch (IOException e) {
-            e.printStackTrace();
+        val pluginConfig: FileConfiguration
+            get() = instance.config
+
+        fun savePluginConfig() {
+            instance.saveConfig()
         }
+
+        fun getMessagesConfig(): FileConfiguration? {
+            return instance?.messagesConfig
+        }
+
+        fun saveMessagesConfig() {
+            try {
+                instance?.messagesConfig?.save(instance.messagesFile)
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+
     }
 
 }

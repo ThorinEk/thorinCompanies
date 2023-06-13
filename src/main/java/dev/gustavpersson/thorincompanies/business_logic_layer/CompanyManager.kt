@@ -1,46 +1,40 @@
-package dev.gustavpersson.thorincompanies.business_logic_layer;
+package dev.gustavpersson.thorincompanies.business_logic_layer
 
-import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity;
-import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository;
-import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company;
-import org.bukkit.entity.Player;
-import org.modelmapper.ModelMapper;
+import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
+import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository
+import org.bukkit.entity.Player
+import org.modelmapper.ModelMapper
+import java.sql.SQLException
+import java.util.*
+import java.util.stream.Collectors
 
-import java.util.Date;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.stream.Collectors;
+class CompanyManager(plugin: ThorinCompanies?) {
+    private val companyRepository: CompanyRepository
+    private val modelMapper: ModelMapper
 
-public class CompanyManager {
-
-    private final CompanyRepository companyRepository;
-
-    private final ModelMapper modelMapper;
-
-    public CompanyManager(ThorinCompanies plugin) throws SQLException, Exception {
-        this.companyRepository = new CompanyRepository(plugin);
-        this.modelMapper = new ModelMapper();
+    init {
+        companyRepository = CompanyRepository(plugin)
+        modelMapper = ModelMapper()
     }
 
-    public void createCompany(Player founder, String name) throws Exception {
-
-        Company company = new Company();
-        company.setName(name);
-        company.setFounderUUID(founder.getUniqueId());
-        company.setCreatedAt(new Date());
-
-        CompanyEntity companyEntity = modelMapper.map(company, CompanyEntity.class);
-
-        companyRepository.createCompany(companyEntity);
+    @Throws(Exception::class)
+    fun createCompany(founder: Player, name: String?) {
+        val company = Company()
+        company.setName(name)
+        company.setFounderUUID(founder.uniqueId)
+        company.createdAt = Date()
+        val companyEntity = modelMapper.map(company, CompanyEntity::class.java)
+        companyRepository.createCompany(companyEntity)
     }
 
-    public List<Company> getAllCompanies() throws SQLException {
-        List<CompanyEntity> companyEntities = companyRepository.getAllCompanies();
-
-        return companyEntities.stream()
-                .map(entity -> modelMapper.map(entity, Company.class))
-                .collect(Collectors.toList());
-    }
-
+    @get:Throws(SQLException::class)
+    val allCompanies: List<Company>
+        get() {
+            val companyEntities = companyRepository.allCompanies
+            return companyEntities!!.stream()
+                    .map { entity: CompanyEntity? -> modelMapper.map(entity, Company::class.java) }
+                    .collect(Collectors.toList())
+        }
 }

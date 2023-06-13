@@ -1,36 +1,17 @@
-package dev.gustavpersson.thorincompanies.data_access_layer.entities;
+package dev.gustavpersson.thorincompanies.data_access_layer.entities
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-import java.util.Date;
+import com.j256.ormlite.field.DatabaseField
+import com.j256.ormlite.table.DatabaseTable
+import java.util.*
 
 @DatabaseTable(tableName = "employees")
-public class EmployeeEntity {
-
+class EmployeeEntity {
     @DatabaseField(generatedId = true)
-    private int id;
+    private val id = 0
 
     @DatabaseField(foreign = true)
-    private CompanyEntity companyId;
+    var companyId: CompanyEntity? = null
 
-    public CompanyEntity getCompanyId() {
-        return companyId;
-    }
-
-    public void setCompanyId(CompanyEntity companyId) {
-        this.companyId = companyId;
-    }
-
-    public Date getHiringDate() {
-        return hiringDate;
-    }
-
-    public void setHiringDate(Date hiringDate) {
-        this.hiringDate = hiringDate;
-    }
-
-    @DatabaseField()
-    private Date hiringDate;
-
+    @DatabaseField
+    var hiringDate: Date? = null
 }

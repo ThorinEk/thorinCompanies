@@ -1,31 +1,26 @@
-package dev.gustavpersson.thorincompanies.data_access_layer.repositories;
+package dev.gustavpersson.thorincompanies.data_access_layer.repositories
 
-import com.j256.ormlite.dao.Dao;
-import dev.gustavpersson.thorincompanies.ThorinCompanies;
-import dev.gustavpersson.thorincompanies.business_logic_layer.ThorinException;
-import dev.gustavpersson.thorincompanies.data_access_layer.Database;
-import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity;
-import org.modelmapper.ModelMapper;
+import com.j256.ormlite.dao.Dao
+import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.data_access_layer.Database
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
+import java.sql.SQLException
 
-import java.sql.SQLException;
-import java.util.List;
+class CompanyRepository(plugin: ThorinCompanies?) {
+    private val companyDao: Dao<*, *>?
+    private val database: Database
 
-public class CompanyRepository {
-    private final Dao companyDao;
-    private final Database database;
-
-    public CompanyRepository(ThorinCompanies plugin) throws SQLException, Exception {
-
-        database = new Database(plugin);
-        companyDao = database.getDao(CompanyEntity.class);
+    init {
+        database = Database(plugin)
+        companyDao = database.getDao<CompanyEntity, Any>(CompanyEntity::class.java)
     }
 
-    public void createCompany(CompanyEntity company) throws Exception {
-        companyDao.create(company);
+    @Throws(Exception::class)
+    fun createCompany(company: CompanyEntity?) {
+        companyDao.create(company)
     }
 
-    public List<CompanyEntity> getAllCompanies() throws SQLException {
-        return companyDao.queryForAll();
-    }
-
+    @get:Throws(SQLException::class)
+    val allCompanies: List<CompanyEntity>
+        get() = companyDao!!.queryForAll()
 }

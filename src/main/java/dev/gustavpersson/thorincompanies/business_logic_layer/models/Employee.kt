@@ -1,7 +1,7 @@
-package dev.gustavpersson.thorincompanies.business_logic_layer.models;
+package dev.gustavpersson.thorincompanies.business_logic_layer.models
 
-import org.bukkit.entity.Player;
+import org.bukkit.entity.Player
 
-public class Employee {
-    private Player player;
+class Employee {
+    private val player: Player? = null
 }
