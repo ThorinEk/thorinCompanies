@@ -2,7 +2,7 @@ package dev.gustavpersson.thorincompanies.data_access_layer.repositories
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
-import dev.gustavpersson.thorincompanies.data_access_layer.data_access_objects.CompanyEntity
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import java.sql.SQLException
 
 class CompanyRepository(plugin: ThorinCompanies?) {
@@ -11,15 +11,15 @@ class CompanyRepository(plugin: ThorinCompanies?) {
 
     init {
         database = Database(plugin)
-        companyDao = database.getDao<CompanyEntity, Any>(CompanyEntity::class.java)
+        companyDao = database.getDao<CompaniesTable, Any>(CompaniesTable::class.java)
     }
 
     @Throws(Exception::class)
-    fun createCompany(company: CompanyEntity) {
+    fun createCompany(company: CompaniesTable) {
         companyDao.create(company)
     }
 
     @get:Throws(SQLException::class)
-    val allCompanies: List<CompanyEntity>
+    val allCompanies: List<CompaniesTable>
         get() = companyDao!!.queryForAll()
 }

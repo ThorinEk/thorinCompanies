@@ -4,8 +4,10 @@ import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.getMessagesCo
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.saveMessagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.savePluginConfig
+import dev.gustavpersson.thorincompanies.business_logic_layer.constants.ConfigKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
 
-class ConfigManager {
+class ConfigService {
     fun populateMessagesFile() {
         val messagesConfig = getMessagesConfig()
         for ((key, value) in messages) {

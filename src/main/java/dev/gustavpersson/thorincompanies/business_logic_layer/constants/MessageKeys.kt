@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.business_logic_layer
+package dev.gustavpersson.thorincompanies.business_logic_layer.constants
 
 object MessageKeys {
     const val COMPANY_CREATED = "company_created"

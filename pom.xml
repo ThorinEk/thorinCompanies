@@ -160,12 +160,13 @@
             <version>0.41.1</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-jodatime -->
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.exposed/exposed-java-time -->
         <dependency>
             <groupId>org.jetbrains.exposed</groupId>
-            <artifactId>exposed-jodatime</artifactId>
+            <artifactId>exposed-java-time</artifactId>
             <version>0.41.1</version>
         </dependency>
+
 
 
     </dependencies>

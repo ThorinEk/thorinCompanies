@@ -2,13 +2,15 @@ package dev.gustavpersson.thorincompanies.presentation_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.*
+import dev.gustavpersson.thorincompanies.business_logic_layer.constants.Arguments
+import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
 class CompCommand(private val plugin: ThorinCompanies) : TabExecutor {
-    private val companyManager = CompanyManager(plugin)
+    private val companyService = CompanyService(plugin)
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         return try {
@@ -46,12 +48,12 @@ class CompCommand(private val plugin: ThorinCompanies) : TabExecutor {
             return
         }
         val companyName = args[1]
-        companyManager.createCompany(player, companyName)
+        companyService.createCompany(player, companyName)
         Chat.sendMessage(player, "Företaget " + args[1] + " skapades")
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
-        val companies = companyManager.allCompanies
+        val companies = companyService.allCompanies
         Chat.sendMessage(player, "&2Företag:")
         for (company in companies) {
             Chat.sendMessage(player, "${company.name}, Grundat ${company.createdAt} av ${company.founderUUID?.name }}")

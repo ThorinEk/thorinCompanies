@@ -1,4 +1,4 @@
-import dev.gustavpersson.thorincompanies.business_logic_layer.models.Companies
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -6,10 +6,14 @@ import org.jetbrains.exposed.sql.transactions.transaction
 class DatabaseManager {
     companion object {
         fun initDatabase() {
-            Database.connect("jdbc:mysql://root@localhost/thorincompanies", driver = "com.mysql.jdbc.Driver")
+            Database.connect(
+                "jdbc:mysql://localhost/thorincompanies",
+                driver = "com.mysql.jdbc.Driver",
+                user = "root",
+                password = "")
 
             transaction {
-                SchemaUtils.create(Companies) // Create table if it does not exist
+                SchemaUtils.create(CompaniesTable) // Create table if it does not exist
             }
         }
     }
