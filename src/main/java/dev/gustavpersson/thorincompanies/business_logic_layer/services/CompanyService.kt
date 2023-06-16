@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 import java.time.LocalDate
 import java.util.*
 
-class CompanyService() {
+class CompanyService {
     private val repository by lazy { CompanyRepository() }
 
     fun create(founder: Player, companyName: String): Company {

@@ -21,6 +21,8 @@ class ThorinCompanies : JavaPlugin() {
     private lateinit var messagesFile: File
     override fun onEnable() {
         try {
+            instance = this
+
             saveDefaultConfig()
             createMessagesFile()
             ConfigService().apply {
@@ -32,6 +34,7 @@ class ThorinCompanies : JavaPlugin() {
             getCommand("comp")?.setExecutor(CompCommandController(this))
         } catch (e: Exception) {
             logger.severe(e.message)
+            e.printStackTrace()
         }
     }
 

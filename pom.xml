@@ -74,6 +74,29 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <artifactSet>
+                                <includes>
+                                    <include>org.jetbrains.kotlin:kotlin-stdlib</include>
+                                    <include>org.jetbrains.kotlin:kotlin-reflect</include>
+                                    <include>org.jetbrains.exposed:*</include>
+                                    <!-- Add here other dependencies that should be included in the final .jar -->
+                                </includes>
+                            </artifactSet>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -93,11 +116,6 @@
         <repository>
             <id>sonatype</id>
             <url>https://oss.sonatype.org/content/groups/public/</url>
-        </repository>
-
-        <repository>
-            <id>quickshop-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
 
         <repository>
@@ -123,13 +141,14 @@
             <version>1.8.22</version>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect -->
         <dependency>
-            <groupId>org.maxgamer</groupId>
-            <artifactId>QuickShop</artifactId>
-            <version>5.1.0.2</version>
-            <scope>provided</scope>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-reflect</artifactId>
+            <version>1.8.22</version>
+            <scope>runtime</scope>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/com.github.MilkBowl/VaultAPI -->
         <dependency>
