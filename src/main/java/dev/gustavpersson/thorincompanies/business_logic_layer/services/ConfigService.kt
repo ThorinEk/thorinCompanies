@@ -11,7 +11,7 @@ class ConfigService {
     fun populateMessagesFile() {
         val messagesConfig = getMessagesConfig()
         for ((key, value) in messages) {
-            if (!messagesConfig!!.contains(key!!)) {
+            if (!messagesConfig.contains(key!!)) {
                 messagesConfig[key] = value
             }
         }

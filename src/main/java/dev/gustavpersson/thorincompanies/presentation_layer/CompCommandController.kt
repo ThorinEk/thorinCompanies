@@ -26,7 +26,7 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 args[0] == "bal" -> player.sendMessage("Ditt konto: " + economy.getBalance(player))
                 args[0] == "create" -> createCompanyHandler(player, args)
                 args[0] == "list" -> listCompaniesHandler(player, args)
-                else -> player.sendMessage(ThorinCompanies.getMessagesConfig()?.getString(MessageKeys.INVALID_ARGUMENT))
+                else -> player.sendMessage(ThorinCompanies.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT))
             }
             true
         } catch (exception: Exception) {
@@ -37,7 +37,7 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    Chat.sendMessage(sender as Player, ThorinCompanies.getMessagesConfig()?.getString(MessageKeys.EXCEPTION_OCCURRED))
+                    Chat.sendMessage(sender as Player, ThorinCompanies.getMessagesConfig().getString(MessageKeys.EXCEPTION_OCCURRED))
                 }
             }
             false

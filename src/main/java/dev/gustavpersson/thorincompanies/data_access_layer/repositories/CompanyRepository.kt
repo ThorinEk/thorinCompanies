@@ -11,7 +11,7 @@ class CompanyRepository {
         return transaction {
             CompanyEntity.new {
                 this.name = newCompany.name
-                this.founderUUID = newCompany.founderUUID
+                this.founderUUID = newCompany.founderUUID.toString()
                 this.createdAt = LocalDate.now()
             }
         }
@@ -21,7 +21,6 @@ class CompanyRepository {
         return transaction {
             val entity = CompanyEntity.findById(request.id) ?: throw Exception("Company not found")
             entity.name = request.name
-            entity.founderUUID = request.founderUUID
             entity
         }
     }

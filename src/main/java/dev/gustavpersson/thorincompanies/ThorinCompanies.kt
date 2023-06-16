@@ -28,7 +28,7 @@ class ThorinCompanies : JavaPlugin() {
                 populateMessagesFile()
             }
             setupEconomy()
-            Database(this).apply { createTables() }
+            Database().apply { initDatabase() }
             getCommand("comp")?.setExecutor(CompCommandController(this))
         } catch (e: Exception) {
             logger.severe(e.message)
@@ -68,7 +68,7 @@ class ThorinCompanies : JavaPlugin() {
     }
 
     companion object {
-        lateinit var instance: ThorinCompanies
+        private lateinit var instance: ThorinCompanies
 
         val pluginConfig: FileConfiguration
             get() = instance.config
@@ -77,13 +77,13 @@ class ThorinCompanies : JavaPlugin() {
             instance.saveConfig()
         }
 
-        fun getMessagesConfig(): FileConfiguration? {
-            return instance?.messagesConfig
+        fun getMessagesConfig(): FileConfiguration {
+            return instance.messagesConfig
         }
 
         fun saveMessagesConfig() {
             try {
-                instance?.messagesConfig?.save(instance.messagesFile)
+                instance.messagesConfig.save(instance.messagesFile)
             } catch (e: IOException) {
                 e.printStackTrace()
             }
