@@ -1,8 +1,8 @@
 package dev.gustavpersson.thorincompanies
 
-import dev.gustavpersson.thorincompanies.business_logic_layer.ConfigService
+import dev.gustavpersson.thorincompanies.business_logic_layer.services.ConfigService
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
-import dev.gustavpersson.thorincompanies.presentation_layer.CompCommand
+import dev.gustavpersson.thorincompanies.presentation_layer.CompCommandController
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.FileConfiguration
@@ -29,7 +29,7 @@ class ThorinCompanies : JavaPlugin() {
             }
             setupEconomy()
             Database(this).apply { createTables() }
-            getCommand("comp")?.setExecutor(CompCommand(this))
+            getCommand("comp")?.setExecutor(CompCommandController(this))
         } catch (e: Exception) {
             logger.severe(e.message)
         }

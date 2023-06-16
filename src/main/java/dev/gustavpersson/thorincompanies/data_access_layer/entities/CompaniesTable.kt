@@ -14,6 +14,6 @@ object CompaniesTable: IntIdTable("thorin_companies") {
 class CompanyEntity(id: EntityID<Int>): IntEntity(id) {
     companion object : IntEntityClass<CompanyEntity>(CompaniesTable)
     var name by CompaniesTable.name
-    var foundUUID by CompaniesTable.founderUUID
+    var founderUUID by CompaniesTable.founderUUID
     var createdAt by CompaniesTable.createdAt
 }

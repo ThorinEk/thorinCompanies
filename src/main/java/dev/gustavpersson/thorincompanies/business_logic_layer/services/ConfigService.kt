@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.business_logic_layer
+package dev.gustavpersson.thorincompanies.business_logic_layer.services
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.getMessagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig

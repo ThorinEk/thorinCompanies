@@ -1,25 +1,46 @@
 package dev.gustavpersson.thorincompanies.data_access_layer.repositories
 
-import dev.gustavpersson.thorincompanies.ThorinCompanies
-import dev.gustavpersson.thorincompanies.data_access_layer.Database
-import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
-import java.sql.SQLException
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
+import org.jetbrains.exposed.sql.transactions.transaction
+import java.time.LocalDate
 
-class CompanyRepository(plugin: ThorinCompanies?) {
-    private val companyDao: Dao<*, *>?
-    private val database: Database
-
-    init {
-        database = Database(plugin)
-        companyDao = database.getDao<CompaniesTable, Any>(CompaniesTable::class.java)
+class CompanyRepository {
+    fun create(newCompany: NewCompany): CompanyEntity {
+        return transaction {
+            CompanyEntity.new {
+                this.name = newCompany.name
+                this.founderUUID = newCompany.founderUUID
+                this.createdAt = LocalDate.now()
+            }
+        }
     }
 
-    @Throws(Exception::class)
-    fun createCompany(company: CompaniesTable) {
-        companyDao.create(company)
+    fun update(request: UpdateCompanyRequest): CompanyEntity {
+        return transaction {
+            val entity = CompanyEntity.findById(request.id) ?: throw Exception("Company not found")
+            entity.name = request.name
+            entity.founderUUID = request.founderUUID
+            entity
+        }
     }
 
-    @get:Throws(SQLException::class)
-    val allCompanies: List<CompaniesTable>
-        get() = companyDao!!.queryForAll()
+    fun delete(id: Int) {
+        transaction {
+            CompanyEntity.findById(id)?.delete() ?: throw Exception("Company not found")
+        }
+    }
+
+    fun findById(id: Int): CompanyEntity? {
+        return transaction {
+            CompanyEntity.findById(id)
+        }
+    }
+
+    fun findAll(): List<CompanyEntity> {
+        return transaction {
+            CompanyEntity.all().toList()
+        }
+    }
 }
