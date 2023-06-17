@@ -80,9 +80,8 @@ class ThorinCompanies : JavaPlugin() {
             instance.saveConfig()
         }
 
-        fun getMessagesConfig(): FileConfiguration {
-            return instance.messagesConfig
-        }
+        val messagesConfig: FileConfiguration
+            get() = instance.messagesConfig
 
         fun saveMessagesConfig() {
             try {

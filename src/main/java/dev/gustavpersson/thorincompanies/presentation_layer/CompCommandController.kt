@@ -5,6 +5,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.*
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.Arguments
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
+import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -20,24 +21,24 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
             val economy = plugin.economy
             when {
                 args.isEmpty() -> {
-                    player.sendMessage("Base-command for the ThorinCompanies plugin by ThorinEk")
+                    ChatUtility.sendMessage(player, "Base-command for the ThorinCompanies plugin by ThorinEk")
                     return true
                 }
-                args[0] == "bal" -> player.sendMessage("Ditt konto: " + economy.getBalance(player))
+                args[0] == "bal" -> ChatUtility.sendMessage(player,"Ditt konto: " + economy.getBalance(player))
                 args[0] == "create" -> createCompanyHandler(player, args)
                 args[0] == "list" -> listCompaniesHandler(player, args)
-                else -> player.sendMessage(ThorinCompanies.getMessagesConfig().getString(MessageKeys.INVALID_ARGUMENT))
+                else -> ChatUtility.sendMessage(player, MessageKeys.INVALID_ARGUMENT)
             }
             true
         } catch (exception: Exception) {
             when (exception) {
                 is ThorinException -> {
-                    Chat.sendMessage(sender as Player, exception.toString())
+                    ChatUtility.sendMessage(sender as Player, exception.message.toString())
                 }
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    Chat.sendMessage(sender as Player, ThorinCompanies.getMessagesConfig().getString(MessageKeys.EXCEPTION_OCCURRED))
+                    ChatUtility.sendMessage(sender as Player, MessageKeys.EXCEPTION_OCCURRED)
                 }
             }
             false
@@ -46,19 +47,24 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
     private fun createCompanyHandler(player: Player, args: Array<String>) {
         if (args.size < 2) {
-            Chat.sendMessage(player, "Du måste ange ett namn på företaget")
+            ChatUtility.sendMessage(player, "Du måste ange ett namn på företaget")
             return
         }
         val companyName = args[1]
         companyService.create(player, companyName)
-        Chat.sendMessage(player, "Företaget " + args[1] + " skapades")
+        ChatUtility.sendMessage(player, "Företaget " + args[1] + " skapades")
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
         val companies = companyService.findAll()
-        Chat.sendMessage(player, "&2Företag:")
+        ChatUtility.sendMessage(player, "&2Företag:")
         for (company in companies) {
-            Chat.sendMessage(player, "${company.name}, Grundat ${company.createdAt} av ${Bukkit.getOfflinePlayer(company.founderUUID) }}")
+            ChatUtility.sendMessage(
+                player,
+                "${company.name}, " +
+                "Grundat ${company.createdAt} av " +
+                "${Bukkit.getOfflinePlayer(company.founderUUID).name }}"
+            )
         }
     }
 

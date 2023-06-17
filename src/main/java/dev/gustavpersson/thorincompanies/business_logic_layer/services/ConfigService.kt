@@ -1,6 +1,6 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.services
 
-import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.getMessagesConfig
+import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.messagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.saveMessagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.savePluginConfig
@@ -9,9 +9,9 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageK
 
 class ConfigService {
     fun populateMessagesFile() {
-        val messagesConfig = getMessagesConfig()
+        val messagesConfig = messagesConfig
         for ((key, value) in messages) {
-            if (!messagesConfig.contains(key!!)) {
+            if (!messagesConfig.contains(key)) {
                 messagesConfig[key] = value
             }
         }
@@ -21,7 +21,7 @@ class ConfigService {
     fun populateConfigFile() {
         val config = pluginConfig
         for ((key, value) in configProperties) {
-            if (!config.contains(key!!)) {
+            if (!config.contains(key)) {
                 config[key] = value
             }
         }
@@ -29,17 +29,15 @@ class ConfigService {
     }
 
     companion object {
-        private val messages: HashMap<String?, String?> = object : HashMap<String?, String?>() {
-            init {
-                put(MessageKeys.COMPANY_CREATED, "Company %s created")
-                put(MessageKeys.COMPANY_BALANCE, "Company balance: %s")
-                put(MessageKeys.EXCEPTION_OCCURRED, "&CAn unexpected exception occurred with ThorinCompanies")
-            }
-        }
-        private val configProperties: HashMap<String?, Any?> = object : HashMap<String?, Any?>() {
-            init {
-                put(ConfigKeys.MAX_COMPANIES_PER_PLAYER, 3)
-            }
-        }
+        private val messages = mapOf(
+            MessageKeys.COMPANY_CREATED to "Company %s created",
+            MessageKeys.COMPANY_BALANCE to "Company balance: %s",
+            MessageKeys.EXCEPTION_OCCURRED to "&CAn unexpected exception occurred with ThorinCompanies"
+        )
+
+        private val configProperties = mapOf(
+            ConfigKeys.MAX_COMPANIES_PER_PLAYER to 3,
+            ConfigKeys.COMPANY_STARTUP_COST to 25000
+        )
     }
 }

@@ -3,7 +3,7 @@ version: '${project.version}'
 main: dev.gustavpersson.thorincompanies.ThorinCompanies
 api-version: 1.18
 authors: [ ThorinEk ]
-description: Minecraft Companies plugin which integrates with QuickShop Reremake
+description: Minecraft Companies plugin developed by ThorinEk.
 website: https://gustavpersson.dev/
 
 depend: [Vault]
