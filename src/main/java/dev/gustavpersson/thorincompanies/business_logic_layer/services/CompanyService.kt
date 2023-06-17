@@ -1,5 +1,7 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.services
 
+import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.business_logic_layer.constants.ConfigKeys
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
@@ -16,12 +18,16 @@ class CompanyService {
 
     fun create(founder: Player, companyName: String): Company {
 
-        //TODO verify that company with same name does not exist
-
         val existingCompany = companyRepository.findByName(companyName)
 
         if (existingCompany != null) {
             throw ThorinException(ErrorCode.COMP_NAME_ALREADY_EXISTS)
+        }
+
+        // TODO check so that player has not reached max companies
+
+        if (!playerCanAffordToStartCompany(founder)) {
+            throw ThorinException(ErrorCode.INSUFFICIENT_FUNDS_TO_START_COMP)
         }
 
         val newCompany = NewCompany(
@@ -51,6 +57,21 @@ class CompanyService {
     fun findAll(): List<Company> {
         val entities = companyRepository.findAll()
         return entities.map { it.toCompany() }
+    }
+
+    private fun playerCanAffordToStartCompany(player: Player): Boolean {
+        val economy = ThorinCompanies.economy
+        val founderBalance = economy.getBalance(player)
+
+        val companyStartupCost = ThorinCompanies.pluginConfig.get(ConfigKeys.COMPANY_STARTUP_COST) as Double
+
+        return founderBalance > companyStartupCost
+    }
+
+    private fun playerOwnsMaxCompanies(player: Player): Boolean {
+        val companyCount = companyRepository.findByFounder(player.uniqueId).size
+        val maxCompanies = ThorinCompanies.pluginConfig.get(ConfigKeys.MAX_COMPANIES_PER_PLAYER) as Int
+        return companyCount >= maxCompanies
     }
 
     private fun CompanyEntity.toCompany() = Company(id.value, name, UUID.fromString(founderUUID), createdAt)

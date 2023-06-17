@@ -28,6 +28,14 @@ class ConfigService {
         savePluginConfig()
     }
 
+    fun <T> getConfig(key: ConfigKeys): T {
+        return pluginConfig.get(key) ? throw Exception("Config key $key not found or wrong type")
+    }
+
+    fun <T> getMessage(key: String): T {
+        return messagesConfig.get(key) as T ?: throw Exception("Message key $key not found or wrong type")
+    }
+
     companion object {
         private val messages = mapOf(
             MessageKeys.COMPANY_CREATED to "Company %s created",

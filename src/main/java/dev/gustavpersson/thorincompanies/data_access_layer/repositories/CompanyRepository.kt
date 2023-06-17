@@ -6,6 +6,7 @@ import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTab
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
+import java.util.UUID
 
 class CompanyRepository {
     fun create(newCompany: NewCompany): CompanyEntity {
@@ -41,6 +42,12 @@ class CompanyRepository {
     fun findByName(name: String): CompanyEntity? {
         return transaction {
             CompanyEntity.find { CompaniesTable.name eq name }.singleOrNull()
+        }
+    }
+
+    fun findByFounder(founderUUID: UUID): List<CompanyEntity> {
+        return transaction {
+            CompanyEntity.find { CompaniesTable.founderUUID eq founderUUID.toString() }.toList()
         }
     }
 
