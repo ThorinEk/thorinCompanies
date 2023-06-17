@@ -14,7 +14,7 @@ import org.bukkit.entity.Player
 import java.util.*
 import kotlin.collections.HashMap
 
-class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
+class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
     private val companyService by lazy { CompanyService() }
 
     // Map to store actions awaiting confirmation
@@ -23,7 +23,7 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         return try {
             val player = sender as Player
-            val economy = plugin.economy
+            val economy = ThorinCompanies.economy
             when {
                 args.isEmpty() -> {
                     ChatUtility.sendMessage(player, "Base-command for the ThorinCompanies plugin by ThorinEk")
@@ -57,6 +57,10 @@ class CompCommandController(private val plugin: ThorinCompanies) : TabExecutor {
             return
         }
         val companyName = args[1]
+
+        // TODO check if player has enough money to start
+
+
         // Store company creation in the confirmation map
         confirmationMap[player.uniqueId] = companyName
         ChatUtility.sendMessage(player, "Företaget " + args[1] + " kommer att skapas. Bekräfta med /com confirm")

@@ -2,6 +2,7 @@ package dev.gustavpersson.thorincompanies.data_access_layer.repositories
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
+import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDate
@@ -34,6 +35,12 @@ class CompanyRepository {
     fun findById(id: Int): CompanyEntity? {
         return transaction {
             CompanyEntity.findById(id)
+        }
+    }
+
+    fun findByName(name: String): CompanyEntity? {
+        return transaction {
+            CompanyEntity.find { CompaniesTable.name eq name }.singleOrNull()
         }
     }
 

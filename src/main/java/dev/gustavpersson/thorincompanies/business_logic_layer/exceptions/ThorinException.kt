@@ -7,5 +7,6 @@ enum class ErrorCode {
     DB_TABLE_GENERATION,
     COMPANY_START,
     UNEXPECTED,
+    COMP_NAME_ALREADY_EXISTS
     // add other error codes here
 }

@@ -2,7 +2,7 @@ package dev.gustavpersson.thorincompanies
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.ConfigService
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
-import dev.gustavpersson.thorincompanies.presentation_layer.CompCommandController
+import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.FileConfiguration
@@ -16,8 +16,6 @@ import java.util.logging.Logger
 class ThorinCompanies : JavaPlugin() {
 
     private val logger = Logger.getLogger("Minecraft")
-
-    lateinit var economy: Economy
     lateinit var messagesConfig: FileConfiguration
     private lateinit var messagesFile: File
 
@@ -33,7 +31,7 @@ class ThorinCompanies : JavaPlugin() {
             }
             setupEconomy()
             Database().apply { initDatabase() }
-            getCommand("com")?.setExecutor(CompCommandController(this))
+            getCommand("com")?.setExecutor(CommandController(this))
         } catch (e: Exception) {
             logger.severe(e.message)
             e.printStackTrace()
@@ -46,7 +44,7 @@ class ThorinCompanies : JavaPlugin() {
     }
 
     private fun setupEconomy() {
-        if (server.pluginManager.getPlugin("Vault") == null) {
+        if (pluginManager.getPlugin("Vault") == null) {
             throw Exception("Vault plugin not found")
         }
         val economyServiceProvider = server.servicesManager.getRegistration(Economy::class.java)
@@ -74,6 +72,7 @@ class ThorinCompanies : JavaPlugin() {
 
     companion object {
         lateinit var instance: ThorinCompanies
+        lateinit var economy: Economy
 
         val pluginConfig: FileConfiguration
             get() = instance.config

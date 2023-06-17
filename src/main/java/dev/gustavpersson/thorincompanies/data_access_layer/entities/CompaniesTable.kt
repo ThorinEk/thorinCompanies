@@ -10,6 +10,10 @@ object CompaniesTable: IntIdTable("thorin_companies") {
     val name  = varchar("name", 25)
     val founderUUID = char("founderUUID", 36)
     val createdAt = date("createdAt")
+
+    init {
+        index(isUnique = true, columns = arrayOf(name))
+    }
 }
 class CompanyEntity(id: EntityID<Int>): IntEntity(id) {
     companion object : IntEntityClass<CompanyEntity>(CompaniesTable)
