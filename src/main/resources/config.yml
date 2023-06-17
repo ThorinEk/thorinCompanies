@@ -1,9 +1,1 @@
 # Configuration for ThorinCompanies
-
-# MySQL dev.gustavpersson.thorincompanies.data_access_layer.Database Connection Properties
-database:
-  hostname: "localhost"
-  port: 3306
-  user: "root"
-  password: ""
-  dbname: ""

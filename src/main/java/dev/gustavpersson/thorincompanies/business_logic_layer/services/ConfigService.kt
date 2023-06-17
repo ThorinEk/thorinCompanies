@@ -37,7 +37,12 @@ class ConfigService {
 
         private val configProperties = mapOf(
             ConfigKeys.MAX_COMPANIES_PER_PLAYER to 3,
-            ConfigKeys.COMPANY_STARTUP_COST to 25000
+            ConfigKeys.COMPANY_STARTUP_COST to 25000,
+            ConfigKeys.DATABASE_HOST to "localhost",
+            ConfigKeys.DATABASE_PORT to 3306,
+            ConfigKeys.DATABASE_USER to "root",
+            ConfigKeys.DATABASE_NAME to "thorincompanies",
+            ConfigKeys.DATABASE_PASSWORD to ""
         )
     }
 }

@@ -1,9 +1,9 @@
 package dev.gustavpersson.thorincompanies.presentation_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
-import dev.gustavpersson.thorincompanies.business_logic_layer.*
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.Arguments
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
 import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
 import org.bukkit.Bukkit
