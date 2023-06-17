@@ -7,6 +7,7 @@ import net.milkbowl.vault.economy.Economy
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.plugin.PluginManager
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.IOException
@@ -19,6 +20,7 @@ class ThorinCompanies : JavaPlugin() {
     lateinit var economy: Economy
     lateinit var messagesConfig: FileConfiguration
     private lateinit var messagesFile: File
+
     override fun onEnable() {
         try {
             instance = this
@@ -31,7 +33,7 @@ class ThorinCompanies : JavaPlugin() {
             }
             setupEconomy()
             Database().apply { initDatabase() }
-            getCommand("comp")?.setExecutor(CompCommandController(this))
+            getCommand("com")?.setExecutor(CompCommandController(this))
         } catch (e: Exception) {
             logger.severe(e.message)
             e.printStackTrace()
@@ -71,7 +73,7 @@ class ThorinCompanies : JavaPlugin() {
     }
 
     companion object {
-        private lateinit var instance: ThorinCompanies
+        lateinit var instance: ThorinCompanies
 
         val pluginConfig: FileConfiguration
             get() = instance.config
@@ -91,6 +93,11 @@ class ThorinCompanies : JavaPlugin() {
             }
         }
 
+        val logger: Logger
+            get() = instance.logger
+
+        val pluginManager: PluginManager
+            get() = instance.server.pluginManager
     }
 
 }

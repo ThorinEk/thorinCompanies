@@ -11,5 +11,5 @@ softdepend:
   - QickShop
 
 commands:
-  comp:
+  com:
     description: Main command
