@@ -29,7 +29,7 @@ class ConfigService {
     }
 
     fun <T> getConfig(key: ConfigKeys): T {
-        return pluginConfig.get(key) ? throw Exception("Config key $key not found or wrong type")
+        return pluginConfig.get(key) as Any
     }
 
     fun <T> getMessage(key: String): T {

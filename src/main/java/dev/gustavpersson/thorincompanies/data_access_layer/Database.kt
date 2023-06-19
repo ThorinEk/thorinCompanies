@@ -1,7 +1,7 @@
 package dev.gustavpersson.thorincompanies.data_access_layer
 
-import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ErrorCode
 import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.EmployeesTable
