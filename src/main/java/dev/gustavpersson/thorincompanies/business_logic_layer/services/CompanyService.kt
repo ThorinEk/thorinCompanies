@@ -16,6 +16,8 @@ import java.util.*
 class CompanyService {
     private val companyRepository by lazy { CompanyRepository() }
 
+    private val configService by lazy { ConfigService() }
+
     fun create(founder: Player, companyName: String): Company {
 
         val existingCompany = companyRepository.findByName(companyName)
@@ -73,14 +75,14 @@ class CompanyService {
         val economy = ThorinCompanies.economy
         val founderBalance = economy.getBalance(player)
 
-        val companyStartupCost = ThorinCompanies.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
+        val companyStartupCost = configService.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
 
         return founderBalance > companyStartupCost
     }
 
     private fun playerOwnsMaxCompanies(player: Player): Boolean {
         val companyCount = companyRepository.findByFounder(player.uniqueId).size
-        val maxCompanies = ThorinCompanies.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
+        val maxCompanies = configService.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
         return companyCount >= maxCompanies
     }
 

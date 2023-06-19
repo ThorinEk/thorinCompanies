@@ -1,13 +1,21 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.utils
 
-import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
+import dev.gustavpersson.thorincompanies.business_logic_layer.services.ConfigService
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
 object ChatUtility {
-    fun sendMessage(player: Player, messageKey: String, vararg values: Any) {
-        val message = ThorinCompanies.messagesConfig.getString(messageKey)
-        val formattedMessage = String.format(message!!, *values)
+    private val configService by lazy { ConfigService() }
+
+    fun sendMessage(player: Player, message: String, vararg values: Any) {
+        val formattedMessage = String.format(message, *values)
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', formattedMessage))
+    }
+
+    fun sendErrorMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
+        val message = configService.getMessage(messageProp) as String
+        val formattedMessage = String.format(message, *values)
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', formattedMessage))
     }
 }

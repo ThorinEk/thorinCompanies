@@ -1,11 +1,13 @@
 package dev.gustavpersson.thorincompanies.presentation_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
-import dev.gustavpersson.thorincompanies.business_logic_layer.constants.Arguments
-import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.Argument
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
 import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
+import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.ConfirmationManager
+import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.CreateCompanyConfirmation
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -21,6 +23,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
     private val confirmationMap = HashMap<UUID, String>()
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        // TODO Verify that sender is a player and not console or other
+
         return try {
             val player = sender as Player
             val economy = ThorinCompanies.economy
@@ -33,7 +37,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 args[0] == "create" -> createCompanyHandler(player, args)
                 args[0] == "list" -> listCompaniesHandler(player, args)
                 args[0] == "confirm" -> confirmHandler(player, args)
-                else -> ChatUtility.sendMessage(player, MessageKeys.INVALID_ARGUMENT)
+                else -> ChatUtility.sendErrorMessage(player, MessageProp.INVALID_ARGUMENT)
             }
             true
         } catch (exception: Exception) {
@@ -44,7 +48,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    ChatUtility.sendMessage(sender as Player, MessageKeys.EXCEPTION_OCCURRED)
+                    ChatUtility.sendErrorMessage(sender as Player, MessageProp.EXCEPTION_OCCURRED)
                 }
             }
             false
@@ -58,15 +62,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         }
         val companyName = args[1]
 
-        try {
-
-        }
-        catch (exception: ThorinException) {
-
-        }
-        catch (exception: Exception) {
-
-        }
+        val confirmation = CreateCompanyConfirmation(player, companyName)
+        ConfirmationManager.addConfirmation(confirmation)
 
 
         // Store company creation in the confirmation map
@@ -102,7 +99,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): List<String> {
         return if (args.size == 1) {
-            listOf(Arguments.CREATE, Arguments.LIST, Arguments.BAL)
+            listOf(Argument.CREATE.arg, Argument.LIST.arg, Argument.BAL.arg)
         } else emptyList()
     }
 }

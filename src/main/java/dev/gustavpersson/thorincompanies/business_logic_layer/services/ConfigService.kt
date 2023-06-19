@@ -5,14 +5,16 @@ import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.saveMessagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.savePluginConfig
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
-import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
+import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 
 class ConfigService {
     fun populateMessagesFile() {
         val messagesConfig = messagesConfig
-        for ((key, value) in defaultMessages) {
-            if (!messagesConfig.contains(key)) {
-                messagesConfig[key] = value
+        for ((property, value) in defaultMessages) {
+            if (!messagesConfig.contains(property.key)) {
+                messagesConfig[property.key] = value
             }
         }
         saveMessagesConfig()
@@ -28,19 +30,22 @@ class ConfigService {
         savePluginConfig()
     }
 
-    fun <T> getConfig(key: ConfigProp): T {
-        return pluginConfig.get(key.key) as T
+    fun getConfig(property: ConfigProp): Any {
+        val configValue = pluginConfig.get(property.key)
+        return configValue ?: throw ThorinException(ErrorCode.CONFIG_PROPERTY_NOT_FOUND)
     }
 
-    fun <T> getMessage(key: String): T {
-        return messagesConfig.get(key) as T ?: throw Exception("Message key $key not found or wrong type")
+    fun getMessage(property: MessageProp): Any {
+        val message = messagesConfig.get(property.key)
+        return message ?: throw ThorinException(ErrorCode.MESSAGE_PROPERTY_NOT_FOUND)
     }
 
     companion object {
         private val defaultMessages = mapOf(
-            MessageKeys.COMPANY_CREATED to "Company %s created",
-            MessageKeys.COMPANY_BALANCE to "Company balance: %s",
-            MessageKeys.EXCEPTION_OCCURRED to "&CAn unexpected exception occurred with ThorinCompanies"
+            MessageProp.COMPANY_CREATED to "Company %s created",
+            MessageProp.COMPANY_BALANCE to "Company balance: %s",
+            MessageProp.EXCEPTION_OCCURRED to "&CAn unexpected exception occurred with ThorinCompanies",
+            MessageProp.CHAT_PREFIX to "&6[&5Companies&6]&F"
         )
 
         private val defaultConfigProperties = mapOf(

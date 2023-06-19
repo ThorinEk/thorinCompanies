@@ -10,16 +10,16 @@ object ConfirmationManager {
     private val confirmationMap = mutableMapOf<UUID, Confirmation>()
     private val taskMap = mutableMapOf<UUID, BukkitTask>()
 
-    fun addConfirmation(player: Player, confirmation: Confirmation) {
-        confirmationMap[player.uniqueId] = confirmation
+    fun addConfirmation(confirmation: Confirmation) {
+        confirmationMap[confirmation.player.uniqueId] = confirmation
         // Cancel any existing task for this player
-        taskMap[player.uniqueId]?.cancel()
+        taskMap[confirmation.player.uniqueId]?.cancel()
         // Schedule the confirmation to be removed after one minute
         val task = Bukkit.getScheduler().runTaskLater(ThorinCompanies.instance, Runnable {
-            confirmationMap.remove(player.uniqueId)
-            taskMap.remove(player.uniqueId)
+            confirmationMap.remove(confirmation.player.uniqueId)
+            taskMap.remove(confirmation.player.uniqueId)
         }, 1200L) // 20 ticks = 1 second, so 1200 ticks = 60 seconds
-        taskMap[player.uniqueId] = task
+        taskMap[confirmation.player.uniqueId] = task
     }
 
     fun removeConfirmation(player: Player) {

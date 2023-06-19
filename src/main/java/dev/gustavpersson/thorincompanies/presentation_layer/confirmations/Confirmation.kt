@@ -3,9 +3,11 @@ package dev.gustavpersson.thorincompanies.presentation_layer.confirmations
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
+import org.bukkit.entity.Player
 
-sealed class Confirmation {
+abstract class Confirmation {
 
+    abstract val player: Player
     abstract fun confirm()
 
     protected fun executeConfirmation(body: () -> Unit) {
