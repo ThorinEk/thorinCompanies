@@ -4,13 +4,13 @@ import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.messagesConfi
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.saveMessagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.savePluginConfig
-import dev.gustavpersson.thorincompanies.business_logic_layer.constants.ConfigKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.MessageKeys
 
 class ConfigService {
     fun populateMessagesFile() {
         val messagesConfig = messagesConfig
-        for ((key, value) in messages) {
+        for ((key, value) in defaultMessages) {
             if (!messagesConfig.contains(key)) {
                 messagesConfig[key] = value
             }
@@ -20,16 +20,16 @@ class ConfigService {
 
     fun populateConfigFile() {
         val config = pluginConfig
-        for ((key, value) in configProperties) {
-            if (!config.contains(key)) {
-                config[key] = value
+        for ((property, value) in defaultConfigProperties) {
+            if (!config.contains(property.key)) {
+                config[property.key] = value
             }
         }
         savePluginConfig()
     }
 
-    fun <T> getConfig(key: ConfigKeys): T {
-        return pluginConfig.get(key) as Any
+    fun <T> getConfig(key: ConfigProp): T {
+        return pluginConfig.get(key.key) as T
     }
 
     fun <T> getMessage(key: String): T {
@@ -37,20 +37,20 @@ class ConfigService {
     }
 
     companion object {
-        private val messages = mapOf(
+        private val defaultMessages = mapOf(
             MessageKeys.COMPANY_CREATED to "Company %s created",
             MessageKeys.COMPANY_BALANCE to "Company balance: %s",
             MessageKeys.EXCEPTION_OCCURRED to "&CAn unexpected exception occurred with ThorinCompanies"
         )
 
-        private val configProperties = mapOf(
-            ConfigKeys.MAX_COMPANIES_PER_PLAYER to 3,
-            ConfigKeys.COMPANY_STARTUP_COST to 25000,
-            ConfigKeys.DATABASE_HOST to "localhost",
-            ConfigKeys.DATABASE_PORT to 3306,
-            ConfigKeys.DATABASE_USER to "root",
-            ConfigKeys.DATABASE_NAME to "thorincompanies",
-            ConfigKeys.DATABASE_PASSWORD to ""
+        private val defaultConfigProperties = mapOf(
+            ConfigProp.MAX_COMPANIES_PER_PLAYER to 3,
+            ConfigProp.COMPANY_STARTUP_COST to 25000,
+            ConfigProp.DATABASE_HOST to "localhost",
+            ConfigProp.DATABASE_PORT to 3306,
+            ConfigProp.DATABASE_USER to "root",
+            ConfigProp.DATABASE_NAME to "thorincompanies",
+            ConfigProp.DATABASE_PASSWORD to ""
         )
     }
 }

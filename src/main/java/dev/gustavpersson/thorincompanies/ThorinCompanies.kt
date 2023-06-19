@@ -1,5 +1,8 @@
 package dev.gustavpersson.thorincompanies
 
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
+import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.ConfigService
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
 import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
@@ -90,6 +93,10 @@ class ThorinCompanies : JavaPlugin() {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+
+        fun getConfig(property: ConfigProp) : Any {
+            return this.pluginConfig.get(property.key) ?: throw ThorinException(ErrorCode.CONFIG_PROPERTY_NOT_FOUND)
         }
 
         val logger: Logger

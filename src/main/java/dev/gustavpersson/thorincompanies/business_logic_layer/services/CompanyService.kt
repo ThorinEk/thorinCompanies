@@ -1,7 +1,7 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.services
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
-import dev.gustavpersson.thorincompanies.business_logic_layer.constants.ConfigKeys
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
@@ -73,14 +73,14 @@ class CompanyService {
         val economy = ThorinCompanies.economy
         val founderBalance = economy.getBalance(player)
 
-        val companyStartupCost = ThorinCompanies.pluginConfig.get(ConfigKeys.COMPANY_STARTUP_COST) as Double
+        val companyStartupCost = ThorinCompanies.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
 
         return founderBalance > companyStartupCost
     }
 
     private fun playerOwnsMaxCompanies(player: Player): Boolean {
         val companyCount = companyRepository.findByFounder(player.uniqueId).size
-        val maxCompanies = ThorinCompanies.pluginConfig.get(ConfigKeys.MAX_COMPANIES_PER_PLAYER) as Int
+        val maxCompanies = ThorinCompanies.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
         return companyCount >= maxCompanies
     }
 
