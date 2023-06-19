@@ -2,7 +2,7 @@ package dev.gustavpersson.thorincompanies.business_logic_layer.services
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.constants.ConfigKeys
-import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ErrorCode
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
@@ -25,6 +25,9 @@ class CompanyService {
         }
 
         // TODO check so that player has not reached max companies
+        if (playerOwnsMaxCompanies(founder)) {
+            throw ThorinException(ErrorCode.MAX_COMPANIES_REACHED)
+        }
 
         if (!playerCanAffordToStartCompany(founder)) {
             throw ThorinException(ErrorCode.INSUFFICIENT_FUNDS_TO_START_COMP)
@@ -45,7 +48,14 @@ class CompanyService {
         return entity.toCompany()
     }
 
-    fun delete(id: Int) {
+    fun delete(id: Int, performingPlayer: Player) {
+
+        //Verify that player owns the company
+        val company = findById(id)
+        if (performingPlayer.uniqueId != company?.founderUUID){
+            throw ThorinException(ErrorCode.ONLY_FOUNDER_CAN_DELETE)
+        }
+
         companyRepository.delete(id)
     }
 

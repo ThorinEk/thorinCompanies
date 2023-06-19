@@ -58,7 +58,15 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         }
         val companyName = args[1]
 
-        // TODO check if player has enough money to start
+        try {
+
+        }
+        catch (exception: ThorinException) {
+
+        }
+        catch (exception: Exception) {
+
+        }
 
 
         // Store company creation in the confirmation map

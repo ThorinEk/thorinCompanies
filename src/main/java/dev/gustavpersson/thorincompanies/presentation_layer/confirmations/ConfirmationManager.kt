@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.presentation_layer
+package dev.gustavpersson.thorincompanies.presentation_layer.confirmations
 
 import org.bukkit.entity.Player
 import java.util.*
