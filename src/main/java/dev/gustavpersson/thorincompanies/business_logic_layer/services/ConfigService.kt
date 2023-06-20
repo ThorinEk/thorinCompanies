@@ -42,10 +42,12 @@ class ConfigService {
 
     companion object {
         private val defaultMessages = mapOf(
-            MessageProp.COMPANY_CREATED to "Company %s created",
+            MessageProp.COMPANY_CREATED to "Company &B%s&R created",
+            MessageProp.COMPANY_DELETED to "Company &B%s&R deleted",
             MessageProp.COMPANY_BALANCE to "Company balance: %s",
             MessageProp.EXCEPTION_OCCURRED to "&CAn unexpected exception occurred with ThorinCompanies",
-            MessageProp.CHAT_PREFIX to "&6[&5Companies&6]&F"
+            MessageProp.CHAT_PREFIX to "&6[&5Companies&6]&F ",
+            MessageProp.SPECIFY_COMP_NAME to ""
         )
 
         private val defaultConfigProperties = mapOf(

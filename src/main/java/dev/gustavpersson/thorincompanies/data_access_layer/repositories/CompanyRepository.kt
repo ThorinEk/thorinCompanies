@@ -14,6 +14,7 @@ class CompanyRepository {
             CompanyEntity.new {
                 this.name = newCompany.name
                 this.founderUUID = newCompany.founderUUID.toString()
+                this.startupCapital = newCompany.startupCapital
                 this.createdAt = LocalDate.now()
             }
         }

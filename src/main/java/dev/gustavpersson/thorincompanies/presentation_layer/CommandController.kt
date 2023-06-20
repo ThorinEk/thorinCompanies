@@ -2,6 +2,7 @@ package dev.gustavpersson.thorincompanies.presentation_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.Argument
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
@@ -13,14 +14,9 @@ import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
-import java.util.*
-import kotlin.collections.HashMap
 
 class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
     private val companyService by lazy { CompanyService() }
-
-    // Map to store actions awaiting confirmation
-    private val confirmationMap = HashMap<UUID, String>()
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         // TODO Verify that sender is a player and not console or other
@@ -33,22 +29,23 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                     ChatUtility.sendMessage(player, "Base-command for the ThorinCompanies plugin by ThorinEk")
                     return true
                 }
-                args[0] == "bal" -> ChatUtility.sendMessage(player,"Ditt konto: " + economy.getBalance(player))
-                args[0] == "create" -> createCompanyHandler(player, args)
-                args[0] == "list" -> listCompaniesHandler(player, args)
-                args[0] == "confirm" -> confirmHandler(player, args)
-                else -> ChatUtility.sendErrorMessage(player, MessageProp.INVALID_ARGUMENT)
+                args[0] == Argument.BAL.arg -> ChatUtility.sendMessage(player,"Ditt konto: " + economy.getBalance(player))
+                args[0] == Argument.CREATE.arg -> createCompanyHandler(player, args)
+                args[0] == Argument.LIST.arg -> listCompaniesHandler(player, args)
+                args[0] == Argument.CONFIRM.arg -> confirmHandler(player, args)
+                args[0] == Argument.DELETE.arg -> deleteCompanyHandler(player, args)
+                else -> ChatUtility.sendMessage(player, MessageProp.INVALID_ARGUMENT)
             }
             true
         } catch (exception: Exception) {
             when (exception) {
                 is ThorinException -> {
-                    ChatUtility.sendMessage(sender as Player, exception.message.toString())
+                    ChatUtility.sendMessage(sender as Player, ErrorTranslator.getErrorMessage(exception.code))
                 }
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    ChatUtility.sendErrorMessage(sender as Player, MessageProp.EXCEPTION_OCCURRED)
+                    ChatUtility.sendMessage(sender as Player, MessageProp.EXCEPTION_OCCURRED)
                 }
             }
             false
@@ -65,10 +62,13 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
 
-
-        // Store company creation in the confirmation map
-        confirmationMap[player.uniqueId] = companyName
         ChatUtility.sendMessage(player, "Företaget " + args[1] + " kommer att skapas. Bekräfta med /com confirm")
+    }
+
+    private fun deleteCompanyHandler(player: Player, args: Array<String>) {
+        if (args.size < 2) {
+            throw ThorinException(ErrorCode.COMP_NAME_NOT_SPECIFIED)
+        }
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
@@ -85,16 +85,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
     }
 
     private fun confirmHandler(player: Player, args: Array<String>) {
-        val companyName = confirmationMap[player.uniqueId]
-        if (companyName == null) {
-            ChatUtility.sendMessage(player, "Inget företag att bekräfta")
-            return
-        }
-        // Proceed with company creation
-        companyService.create(player, companyName)
-        ChatUtility.sendMessage(player, "Företaget $companyName skapades")
-        // Remove player's action from the confirmation map
-        confirmationMap.remove(player.uniqueId)
+        val confirmation = ConfirmationManager.getConfirmation(player)
+        confirmation?.confirm()
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): List<String> {

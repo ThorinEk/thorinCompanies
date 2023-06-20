@@ -10,6 +10,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompa
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository
 import org.bukkit.entity.Player
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
 
@@ -26,7 +27,6 @@ class CompanyService {
             throw ThorinException(ErrorCode.COMP_NAME_ALREADY_EXISTS)
         }
 
-        // TODO check so that player has not reached max companies
         if (playerOwnsMaxCompanies(founder)) {
             throw ThorinException(ErrorCode.MAX_COMPANIES_REACHED)
         }
@@ -35,9 +35,12 @@ class CompanyService {
             throw ThorinException(ErrorCode.INSUFFICIENT_FUNDS_TO_START_COMP)
         }
 
+        // TODO withdraw startup capital
+
         val newCompany = NewCompany(
             name = companyName,
             founderUUID = founder.uniqueId,
+            startupCapital = configService.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal,
             createdAt = LocalDate.now()
         )
         val entity = companyRepository.create(newCompany)
@@ -86,5 +89,6 @@ class CompanyService {
         return companyCount >= maxCompanies
     }
 
-    private fun CompanyEntity.toCompany() = Company(id.value, name, UUID.fromString(founderUUID), createdAt)
+    private fun CompanyEntity.toCompany() =
+        Company(id.value, name, UUID.fromString(founderUUID), startupCapital, createdAt)
 }

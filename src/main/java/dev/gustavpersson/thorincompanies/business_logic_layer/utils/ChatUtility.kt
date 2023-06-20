@@ -10,10 +10,11 @@ object ChatUtility {
 
     fun sendMessage(player: Player, message: String, vararg values: Any) {
         val formattedMessage = String.format(message, *values)
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', formattedMessage))
+        val prefix = configService.getMessage(MessageProp.CHAT_PREFIX) as String
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', prefix + formattedMessage))
     }
 
-    fun sendErrorMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
+    fun sendMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
         val message = configService.getMessage(messageProp) as String
         val formattedMessage = String.format(message, *values)
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', formattedMessage))

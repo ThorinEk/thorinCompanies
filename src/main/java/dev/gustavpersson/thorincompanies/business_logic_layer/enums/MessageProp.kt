@@ -4,9 +4,11 @@ package dev.gustavpersson.thorincompanies.business_logic_layer.enums
 
 enum class MessageProp(val key: String) {
     COMPANY_CREATED("company_created"),
+    COMPANY_DELETED("company_deleted"),
     COMPANY_BALANCE("company_balance"),
     EXCEPTION_OCCURRED("exception_occurred"),
     INVALID_ARGUMENT("invalid_argument"),
-    CHAT_PREFIX("chat.prefix");
+    CHAT_PREFIX("chat.prefix"),
+    SPECIFY_COMP_NAME("specify_comp_name")
 }
 

@@ -20,6 +20,8 @@ abstract class Confirmation {
             ThorinCompanies.logger.severe(exception.message)
             exception.printStackTrace()
             throw ThorinException(ErrorCode.UNEXPECTED)
+        } finally {
+            ConfirmationManager.removeConfirmation(player)
         }
     }
 }
