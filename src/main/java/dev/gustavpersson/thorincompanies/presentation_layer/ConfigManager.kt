@@ -49,7 +49,7 @@ class ConfigManager {
                 MessageProp.EXCEPTION_OCCURRED -> "&CAn unexpected exception occurred with ThorinCompanies"
                 MessageProp.CHAT_PREFIX -> "&6[&5Companies&6]&F "
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
-                MessageProp.AWAIT_COMP_CREATION_CONFIRM -> "Awaiting company creation. Type /com confirm to proceed"
+                MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation. Type /com confirm to proceed"
                 MessageProp.INVALID_ARGUMENT -> "An invalid argument was specified"
             }
         }
