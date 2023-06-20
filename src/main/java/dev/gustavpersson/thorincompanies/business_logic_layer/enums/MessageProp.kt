@@ -9,6 +9,8 @@ enum class MessageProp(val key: String) {
     EXCEPTION_OCCURRED("exception_occurred"),
     INVALID_ARGUMENT("invalid_argument"),
     CHAT_PREFIX("chat.prefix"),
-    SPECIFY_COMP_NAME("specify_comp_name")
+    SPECIFY_COMP_NAME("specify_comp_name"),
+    AWAITING_COMP_CREATION_CONFIRM("await_comp_creation_confirm"),
+    AWAIT_COMP_DELETION_CONFIRM("await_comp_deletion_confirm")
 }
 

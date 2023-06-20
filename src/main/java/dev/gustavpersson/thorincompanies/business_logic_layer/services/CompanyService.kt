@@ -9,6 +9,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository
+import dev.gustavpersson.thorincompanies.presentation_layer.ConfigManager
 import org.bukkit.entity.Player
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -17,7 +18,7 @@ import java.util.*
 class CompanyService {
     private val companyRepository by lazy { CompanyRepository() }
 
-    private val configService by lazy { ConfigService() }
+    private val configManager by lazy { ConfigManager() }
 
     fun create(founder: Player, companyName: String): Company {
 
@@ -40,7 +41,7 @@ class CompanyService {
         val newCompany = NewCompany(
             name = companyName,
             founderUUID = founder.uniqueId,
-            startupCapital = configService.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal,
+            startupCapital = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal,
             createdAt = LocalDate.now()
         )
         val entity = companyRepository.create(newCompany)
@@ -51,6 +52,10 @@ class CompanyService {
         val request = UpdateCompanyRequest(id, name)
         val entity = companyRepository.update(request)
         return entity.toCompany()
+    }
+
+    fun findByName(name: String): Company? {
+        return companyRepository.findByName(name)?.toCompany()
     }
 
     fun delete(id: Int, performingPlayer: Player) {
@@ -78,14 +83,14 @@ class CompanyService {
         val economy = ThorinCompanies.economy
         val founderBalance = economy.getBalance(player)
 
-        val companyStartupCost = configService.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
+        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
 
         return founderBalance > companyStartupCost
     }
 
     private fun playerOwnsMaxCompanies(player: Player): Boolean {
         val companyCount = companyRepository.findByFounder(player.uniqueId).size
-        val maxCompanies = configService.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
+        val maxCompanies = configManager.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
         return companyCount >= maxCompanies
     }
 

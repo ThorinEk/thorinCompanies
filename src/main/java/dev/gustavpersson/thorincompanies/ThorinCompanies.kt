@@ -1,6 +1,6 @@
 package dev.gustavpersson.thorincompanies
 
-import dev.gustavpersson.thorincompanies.business_logic_layer.services.ConfigService
+import dev.gustavpersson.thorincompanies.presentation_layer.ConfigManager
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
 import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
 import net.milkbowl.vault.economy.Economy
@@ -25,7 +25,7 @@ class ThorinCompanies : JavaPlugin() {
 
             saveDefaultConfig()
             createMessagesFile()
-            ConfigService().apply {
+            ConfigManager().apply {
                 populateConfigFile()
                 populateMessagesFile()
             }

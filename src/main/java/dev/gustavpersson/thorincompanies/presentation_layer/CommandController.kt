@@ -9,6 +9,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanySe
 import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.ConfirmationManager
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.CreateCompanyConfirmation
+import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.DeleteCompanyConfirmation
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -33,7 +34,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 args[0] == Argument.CREATE.arg -> createCompanyHandler(player, args)
                 args[0] == Argument.LIST.arg -> listCompaniesHandler(player, args)
                 args[0] == Argument.CONFIRM.arg -> confirmHandler(player, args)
-                args[0] == Argument.DELETE.arg -> deleteCompanyHandler(player, args)
+                args[0] == Argument.LIQUIDATE.arg -> deleteCompanyHandler(player, args)
                 else -> ChatUtility.sendMessage(player, MessageProp.INVALID_ARGUMENT)
             }
             true
@@ -69,6 +70,12 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         if (args.size < 2) {
             throw ThorinException(ErrorCode.COMP_NAME_NOT_SPECIFIED)
         }
+
+        val companyName = args[1]
+
+        val company = companyService.findByName(companyName) ?: throw ThorinException(ErrorCode.COMP_NAME_NOT_FOUND)
+
+        val confirmation = DeleteCompanyConfirmation(player, company.id)
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {

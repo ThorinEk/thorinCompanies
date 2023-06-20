@@ -16,6 +16,7 @@ object ErrorTranslator {
             ErrorCode.CONFIG_PROPERTY_NOT_FOUND -> "Config property not found"
             ErrorCode.MESSAGE_PROPERTY_NOT_FOUND -> "Message property not found"
             ErrorCode.COMP_NAME_NOT_SPECIFIED -> "Company name needs to be specified"
+            ErrorCode.COMP_NAME_NOT_FOUND -> "No company with that name was found"
         }
     }
 }
