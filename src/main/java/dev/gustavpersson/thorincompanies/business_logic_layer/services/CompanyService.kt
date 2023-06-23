@@ -3,6 +3,7 @@ package dev.gustavpersson.thorincompanies.business_logic_layer.services
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
@@ -36,19 +37,18 @@ class CompanyService {
             throw ThorinException(ErrorCode.INSUFFICIENT_FUNDS_TO_START_COMP)
         }
 
-        // TODO withdraw startup capital
-
-        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
-
-        ThorinCompanies.economy.withdrawPlayer(founder, companyStartupCost)
+        val companyStartupCost = getCostToStartCompany()
 
         val newCompany = NewCompany(
             name = companyName,
             founderUUID = founder.uniqueId,
-            startupCapital = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal,
+            startupCapital = companyStartupCost,
             createdAt = LocalDate.now()
         )
         val entity = companyRepository.create(newCompany)
+
+        ThorinCompanies.economy.withdrawPlayer(founder, companyStartupCost.toDouble())
+
         return entity.toCompany()
     }
 
@@ -96,6 +96,14 @@ class CompanyService {
         val companyCount = companyRepository.findByFounder(player.uniqueId).size
         val maxCompanies = configManager.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
         return companyCount >= maxCompanies
+    }
+
+    private fun getCostToStartCompany(): BigDecimal {
+        return when (val costObject = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST)) {
+            is Int -> BigDecimal.valueOf(costObject.toLong())
+            is Double -> BigDecimal.valueOf(costObject)
+            else -> throw IllegalArgumentException("Invalid ${ConfigProp.COMPANY_STARTUP_COST.key} value")
+        }
     }
 
     private fun CompanyEntity.toCompany() =
