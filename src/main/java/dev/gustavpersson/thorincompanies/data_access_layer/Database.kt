@@ -22,8 +22,6 @@ class Database {
             val user = configManager.getConfig(ConfigProp.DATABASE_USER) as String
             val password = configManager.getConfig(ConfigProp.DATABASE_PASSWORD) as String
 
-            ThorinCompanies.logger.severe("Database host: $host, name: $dbName")
-
             Database.connect(
                 "jdbc:mysql://$host:$port/$dbName",
                 driver = "com.mysql.cj.jdbc.Driver",
