@@ -86,9 +86,7 @@ class CompanyService {
         val economy = ThorinCompanies.economy
         val founderBalance = economy.getBalance(player)
 
-        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal
-
-        return founderBalance.toBigDecimal() > companyStartupCost
+        return founderBalance.toBigDecimal() > getCostToStartCompany()
     }
 
     private fun playerOwnsMaxCompanies(player: Player): Boolean {
