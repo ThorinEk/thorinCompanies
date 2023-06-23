@@ -1,6 +1,7 @@
-package dev.gustavpersson.thorincompanies.presentation_layer.confirmations
+package dev.gustavpersson.thorincompanies.presentation_layer.managers
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.Confirmation
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.scheduler.BukkitTask

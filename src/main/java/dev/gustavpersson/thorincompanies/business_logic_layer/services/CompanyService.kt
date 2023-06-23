@@ -9,7 +9,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository
-import dev.gustavpersson.thorincompanies.presentation_layer.ConfigManager
+import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import org.bukkit.entity.Player
 import java.math.BigDecimal
 import java.time.LocalDate
@@ -37,6 +37,10 @@ class CompanyService {
         }
 
         // TODO withdraw startup capital
+
+        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
+
+        ThorinCompanies.economy.withdrawPlayer(founder, companyStartupCost)
 
         val newCompany = NewCompany(
             name = companyName,
@@ -83,9 +87,9 @@ class CompanyService {
         val economy = ThorinCompanies.economy
         val founderBalance = economy.getBalance(player)
 
-        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as Double
+        val companyStartupCost = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST) as BigDecimal
 
-        return founderBalance > companyStartupCost
+        return founderBalance.toBigDecimal() > companyStartupCost
     }
 
     private fun playerOwnsMaxCompanies(player: Player): Boolean {

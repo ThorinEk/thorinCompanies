@@ -1,7 +1,7 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.utils
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
-import dev.gustavpersson.thorincompanies.presentation_layer.ConfigManager
+import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 

@@ -7,7 +7,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
 import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
-import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.ConfirmationManager
+import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfirmationManager
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.CreateCompanyConfirmation
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.DeleteCompanyConfirmation
 import org.bukkit.Bukkit
@@ -62,8 +62,6 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
-
-        ChatUtility.sendMessage(player, "Företaget " + args[1] + " kommer att skapas. Bekräfta med /com confirm")
     }
 
     private fun deleteCompanyHandler(player: Player, args: Array<String>) {

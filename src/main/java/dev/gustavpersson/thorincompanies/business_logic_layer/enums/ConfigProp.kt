@@ -8,5 +8,6 @@ enum class ConfigProp(val key: String) {
     DATABASE_PORT("database.port"),
     DATABASE_USER("database.user"),
     DATABASE_NAME("database.dbname"),
-    DATABASE_PASSWORD("database.password");
+    DATABASE_PASSWORD("database.password"),
+    DATE_FORMAT("date_format")
 }

@@ -1,22 +1,32 @@
 package dev.gustavpersson.thorincompanies.data_access_layer
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.EmployeesTable
+import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class Database {
+    private val configManager by lazy { ConfigManager() }
+
     fun initDatabase() {
         try {
+            val host = configManager.getConfig(ConfigProp.DATABASE_HOST) as String
+            val port = configManager.getConfig(ConfigProp.DATABASE_PORT) as String
+            val dbName = configManager.getConfig(ConfigProp.DATABASE_NAME) as String
+            val user = configManager.getConfig(ConfigProp.DATABASE_USER) as String
+            val password = configManager.getConfig(ConfigProp.DATABASE_PASSWORD) as String
+
             Database.connect(
-                "jdbc:mysql://localhost/thorincompanies",
+                "jdbc:mysql://${host}:${port}/${dbName}",
                 driver = "com.mysql.jdbc.Driver",
-                user = "root",
-                password = "")
+                user = user,
+                password = password)
         }
         catch (exception: Exception) {
             ThorinCompanies.logger.severe("Could not connect to the MySQL database. Please verify your database properties.")

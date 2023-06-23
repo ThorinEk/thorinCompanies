@@ -1,6 +1,6 @@
 package dev.gustavpersson.thorincompanies
 
-import dev.gustavpersson.thorincompanies.presentation_layer.ConfigManager
+import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
 import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
 import net.milkbowl.vault.economy.Economy

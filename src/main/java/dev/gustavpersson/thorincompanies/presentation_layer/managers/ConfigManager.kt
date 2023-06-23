@@ -1,4 +1,4 @@
-package dev.gustavpersson.thorincompanies.presentation_layer
+package dev.gustavpersson.thorincompanies.presentation_layer.managers
 
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.messagesConfig
 import dev.gustavpersson.thorincompanies.ThorinCompanies.Companion.pluginConfig
@@ -14,7 +14,7 @@ class ConfigManager {
         val messagesConfig = messagesConfig
         for (property in enumValues<MessageProp>()) {
             if (!messagesConfig.contains(property.key)) {
-                messagesConfig[property.key] = property
+                messagesConfig[property.key] = getDefaultMessage(property)
             }
         }
         saveMessagesConfig()
@@ -24,7 +24,7 @@ class ConfigManager {
         val config = pluginConfig
         for (property in enumValues<ConfigProp>()) {
             if (!config.contains(property.key)) {
-                config[property.key] = getConfig(property)
+                config[property.key] = getDefaultConfig(property)
             }
         }
         savePluginConfig()
@@ -41,7 +41,7 @@ class ConfigManager {
     }
 
     companion object {
-        private fun getMessage(property: MessageProp): String {
+        private fun getDefaultMessage(property: MessageProp): String {
             return when (property) {
                 MessageProp.COMPANY_CREATED -> "Company &B%s&R created"
                 MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
@@ -51,10 +51,11 @@ class ConfigManager {
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
                 MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation. Type /com confirm to proceed"
                 MessageProp.INVALID_ARGUMENT -> "An invalid argument was specified"
+                MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of &s. Type /com confirm to proceed."
             }
         }
 
-        private fun getConfig(property: ConfigProp): Any {
+        private fun getDefaultConfig(property: ConfigProp): Any {
             return when (property) {
                 ConfigProp.MAX_COMPANIES_PER_PLAYER -> 3
                 ConfigProp.COMPANY_STARTUP_COST -> 25000
@@ -63,6 +64,7 @@ class ConfigManager {
                 ConfigProp.DATABASE_USER -> "root"
                 ConfigProp.DATABASE_NAME -> "thorincompanies"
                 ConfigProp.DATABASE_PASSWORD -> ""
+                ConfigProp.DATE_FORMAT -> "yyyy-MM-dd"
             }
         }
     }
