@@ -3,7 +3,6 @@ package dev.gustavpersson.thorincompanies.business_logic_layer.services
 import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
-import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
