@@ -34,8 +34,7 @@ class Database {
             ThorinCompanies.logger.severe(exception.message)
             exception.printStackTrace()
             ThorinCompanies.logger.severe("Could not connect to the MySQL database. Please verify your database properties.")
-            ThorinCompanies.pluginManager.disablePlugin(ThorinCompanies.instance)
-            return
+            throw ThorinException(ErrorCode.DB_INIT)
         }
 
         try {

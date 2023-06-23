@@ -1,8 +1,11 @@
 package dev.gustavpersson.thorincompanies
 
+import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
+import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
 import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
 import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
+import dev.gustavpersson.thorincompanies.presentation_layer.ErrorTranslator
 import net.milkbowl.vault.economy.Economy
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.FileConfiguration
@@ -31,9 +34,14 @@ class ThorinCompanies : JavaPlugin() {
             setupEconomy()
             Database().apply { initDatabase() }
             getCommand("com")?.setExecutor(CommandController(this))
-        } catch (e: Exception) {
+        } catch (e: ThorinException) {
+            logger.severe(ErrorTranslator.getErrorMessage(e.code))
+            this.onDisable()
+        }
+        catch (e: Exception) {
             logger.severe(e.message)
             e.printStackTrace()
+            this.onDisable()
         }
     }
 

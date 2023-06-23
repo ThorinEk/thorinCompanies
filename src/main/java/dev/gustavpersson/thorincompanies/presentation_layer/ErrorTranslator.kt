@@ -5,7 +5,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 object ErrorTranslator {
     fun getErrorMessage(errorCode: ErrorCode): String {
         return when (errorCode) {
-            ErrorCode.DB_INIT -> "Error initializing database"
+            ErrorCode.DB_INIT -> "Could not connect to the MySQL database. Please verify your database properties"
             ErrorCode.DB_TABLE_GENERATION -> "Error generating database tables"
             ErrorCode.COMPANY_START -> "Error starting company"
             ErrorCode.UNEXPECTED -> "An unexpected error occurred"
@@ -17,6 +17,7 @@ object ErrorTranslator {
             ErrorCode.MESSAGE_PROPERTY_NOT_FOUND -> "Message property not found"
             ErrorCode.COMP_NAME_NOT_SPECIFIED -> "Company name needs to be specified"
             ErrorCode.COMP_NAME_NOT_FOUND -> "No company with that name was found"
+            ErrorCode.CONFIG_PROPERTY_WRONG_TYPE -> "The configuration property has the wrong data type"
         }
     }
 }

@@ -41,7 +41,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         } catch (exception: Exception) {
             when (exception) {
                 is ThorinException -> {
-                    ChatUtility.sendMessage(sender as Player, ErrorTranslator.getErrorMessage(exception.code))
+                    ChatUtility.sendMessage(sender as Player, exception.code)
                 }
                 else -> {
                     plugin.logger.severe(exception.toString())

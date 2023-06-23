@@ -35,7 +35,7 @@ class ConfigManager {
         return configValue ?: throw ThorinException(ErrorCode.CONFIG_PROPERTY_NOT_FOUND)
     }
 
-    fun <T> getMessage(property: MessageProp): Any {
+    fun getMessage(property: MessageProp): Any {
         val message = messagesConfig.get(property.key)
         return message?: throw ThorinException(ErrorCode.MESSAGE_PROPERTY_NOT_FOUND)
     }
