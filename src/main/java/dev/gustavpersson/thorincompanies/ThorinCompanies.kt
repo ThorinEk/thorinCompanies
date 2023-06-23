@@ -36,8 +36,7 @@ class ThorinCompanies : JavaPlugin() {
         } catch (e: ThorinException) {
             logger.severe(ErrorTranslator.getErrorMessage(e.code))
             this.onDisable()
-        }
-        catch (e: Exception) {
+        } catch (e: Exception) {
             logger.severe(e.message)
             e.printStackTrace()
             this.onDisable()

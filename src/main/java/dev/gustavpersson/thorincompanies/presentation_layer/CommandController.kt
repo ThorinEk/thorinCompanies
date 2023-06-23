@@ -81,7 +81,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
         val confirmation = DeleteCompanyConfirmation(player, company.id)
         ConfirmationManager.addConfirmation(confirmation)
-        ChatUtility.sendMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM)
+        ChatUtility.sendMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM, company.name)
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
@@ -92,19 +92,27 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 player,
                 "${company.name}, " +
                 "Grundat ${company.createdAt} av " +
-                "${Bukkit.getOfflinePlayer(company.founderUUID).name }}"
+                "${Bukkit.getOfflinePlayer(company.founderUUID).name }"
             )
         }
     }
 
     private fun confirmHandler(player: Player, args: Array<String>) {
         val confirmation = ConfirmationManager.getConfirmation(player)
-        confirmation?.confirm()
+        if (confirmation != null) {
+            confirmation.confirm()
+        } else {
+            ChatUtility.sendMessage(player, ErrorCode.CONFIRMATION_EXPIRED)
+        }
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): List<String> {
         return if (args.size == 1) {
-            listOf(Argument.CREATE.arg, Argument.LIST.arg, Argument.BAL.arg)
+            listOf(
+                Argument.CREATE.arg,
+                Argument.LIST.arg,
+                Argument.BAL.arg,
+                Argument.LIQUIDATE.arg)
         } else emptyList()
     }
 }
