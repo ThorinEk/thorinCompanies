@@ -15,7 +15,6 @@ import java.util.logging.Logger
 
 class ThorinCompanies : JavaPlugin() {
 
-    private val logger = Logger.getLogger("Minecraft")
     lateinit var messagesConfig: FileConfiguration
     private lateinit var messagesFile: File
 

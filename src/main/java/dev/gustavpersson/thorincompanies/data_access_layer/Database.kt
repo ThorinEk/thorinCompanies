@@ -17,18 +17,22 @@ class Database {
     fun initDatabase() {
         try {
             val host = configManager.getConfig(ConfigProp.DATABASE_HOST) as String
-            val port = configManager.getConfig(ConfigProp.DATABASE_PORT) as String
+            val port = configManager.getConfig(ConfigProp.DATABASE_PORT) as Int
             val dbName = configManager.getConfig(ConfigProp.DATABASE_NAME) as String
             val user = configManager.getConfig(ConfigProp.DATABASE_USER) as String
             val password = configManager.getConfig(ConfigProp.DATABASE_PASSWORD) as String
 
+            ThorinCompanies.logger.severe("Database host: $host, name: $dbName")
+
             Database.connect(
-                "jdbc:mysql://${host}:${port}/${dbName}",
-                driver = "com.mysql.jdbc.Driver",
+                "jdbc:mysql://$host:$port/$dbName",
+                driver = "com.mysql.cj.jdbc.Driver",
                 user = user,
                 password = password)
         }
         catch (exception: Exception) {
+            ThorinCompanies.logger.severe(exception.message)
+            exception.printStackTrace()
             ThorinCompanies.logger.severe("Could not connect to the MySQL database. Please verify your database properties.")
             ThorinCompanies.pluginManager.disablePlugin(ThorinCompanies.instance)
             return

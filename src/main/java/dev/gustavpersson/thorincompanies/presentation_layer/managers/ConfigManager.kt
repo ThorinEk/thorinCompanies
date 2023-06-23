@@ -14,7 +14,7 @@ class ConfigManager {
         val messagesConfig = messagesConfig
         for (property in enumValues<MessageProp>()) {
             if (!messagesConfig.contains(property.key)) {
-                messagesConfig[property.key] = getDefaultMessage(property)
+                messagesConfig.set(property.key, getDefaultMessage(property))
             }
         }
         saveMessagesConfig()
@@ -24,7 +24,7 @@ class ConfigManager {
         val config = pluginConfig
         for (property in enumValues<ConfigProp>()) {
             if (!config.contains(property.key)) {
-                config[property.key] = getDefaultConfig(property)
+                config.set(property.key, getDefaultConfig(property))
             }
         }
         savePluginConfig()
@@ -35,9 +35,9 @@ class ConfigManager {
         return configValue ?: throw ThorinException(ErrorCode.CONFIG_PROPERTY_NOT_FOUND)
     }
 
-    fun getMessage(property: MessageProp): Any {
+    fun <T> getMessage(property: MessageProp): Any {
         val message = messagesConfig.get(property.key)
-        return message ?: throw ThorinException(ErrorCode.MESSAGE_PROPERTY_NOT_FOUND)
+        return message?: throw ThorinException(ErrorCode.MESSAGE_PROPERTY_NOT_FOUND)
     }
 
     companion object {
