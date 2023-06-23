@@ -20,33 +20,38 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
     private val companyService by lazy { CompanyService() }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
-        // TODO Verify that sender is a player and not console or other
+        if (sender !is Player){
+            sender.sendMessage("This command can only be run by a player.")
+            return false
+        }
 
         return try {
-            val player = sender as Player
             val economy = ThorinCompanies.economy
             when {
                 args.isEmpty() -> {
-                    ChatUtility.sendMessage(player, "Base-command for the ThorinCompanies plugin by ThorinEk")
+                    ChatUtility.sendMessage(sender, "Base-command for the ThorinCompanies plugin by ThorinEk")
                     return true
                 }
-                args[0] == Argument.BAL.arg -> ChatUtility.sendMessage(player,"Ditt konto: " + economy.getBalance(player))
-                args[0] == Argument.CREATE.arg -> createCompanyHandler(player, args)
-                args[0] == Argument.LIST.arg -> listCompaniesHandler(player, args)
-                args[0] == Argument.CONFIRM.arg -> confirmHandler(player, args)
-                args[0] == Argument.LIQUIDATE.arg -> deleteCompanyHandler(player, args)
-                else -> ChatUtility.sendMessage(player, MessageProp.INVALID_ARGUMENT)
+                args[0] == Argument.BAL.arg -> ChatUtility.sendMessage(
+                    sender,
+                    "Ditt konto: " + economy.getBalance(sender)
+                )
+                args[0] == Argument.CREATE.arg -> createCompanyHandler(sender, args)
+                args[0] == Argument.LIST.arg -> listCompaniesHandler(sender, args)
+                args[0] == Argument.CONFIRM.arg -> confirmHandler(sender, args)
+                args[0] == Argument.LIQUIDATE.arg -> deleteCompanyHandler(sender, args)
+                else -> ChatUtility.sendMessage(sender, MessageProp.INVALID_ARGUMENT)
             }
             true
         } catch (exception: Exception) {
             when (exception) {
                 is ThorinException -> {
-                    ChatUtility.sendMessage(sender as Player, exception.code)
+                    ChatUtility.sendMessage(sender, exception.code)
                 }
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    ChatUtility.sendMessage(sender as Player, MessageProp.EXCEPTION_OCCURRED)
+                    ChatUtility.sendMessage(sender, MessageProp.EXCEPTION_OCCURRED)
                 }
             }
             false
@@ -55,13 +60,14 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
     private fun createCompanyHandler(player: Player, args: Array<String>) {
         if (args.size < 2) {
-            ChatUtility.sendMessage(player, "Du måste ange ett namn på företaget")
-            return
+            throw ThorinException(ErrorCode.COMP_NAME_NOT_SPECIFIED)
         }
+
         val companyName = args[1]
 
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
+        ChatUtility.sendMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM)
     }
 
     private fun deleteCompanyHandler(player: Player, args: Array<String>) {
@@ -74,6 +80,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         val company = companyService.findByName(companyName) ?: throw ThorinException(ErrorCode.COMP_NAME_NOT_FOUND)
 
         val confirmation = DeleteCompanyConfirmation(player, company.id)
+        ConfirmationManager.addConfirmation(confirmation)
+        ChatUtility.sendMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM)
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {

@@ -27,5 +27,4 @@ object ChatUtility {
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', errorMessage))
     }
 
-
 }

@@ -1,7 +1,6 @@
 package dev.gustavpersson.thorincompanies
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
-import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
 import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import dev.gustavpersson.thorincompanies.data_access_layer.Database
 import dev.gustavpersson.thorincompanies.presentation_layer.CommandController
