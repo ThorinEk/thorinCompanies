@@ -43,15 +43,17 @@ class ConfigManager {
     companion object {
         private fun getDefaultMessage(property: MessageProp): String {
             return when (property) {
-                MessageProp.COMPANY_CREATED -> "Company &B%s&R created"
+                MessageProp.COMPANY_CREATED -> "Company &B%s&R created with a startup capital of %s"
                 MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
                 MessageProp.COMPANY_BALANCE -> "Company balance: %s"
                 MessageProp.EXCEPTION_OCCURRED -> "&CAn unexpected exception occurred with ThorinCompanies"
                 MessageProp.CHAT_PREFIX -> "&6[&5Companies&6]&F "
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
-                MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation. Type /com confirm to proceed"
+                MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation, costing %s. Type /com confirm to proceed"
                 MessageProp.INVALID_ARGUMENT -> "An invalid argument was specified"
                 MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of &s. Type /com confirm to proceed."
+                MessageProp.COMP_LIST_ITEM -> "%s, founded %s by %s."
+                MessageProp.COMP_LIST_TITLE -> "Companies:"
             }
         }
 
@@ -65,6 +67,7 @@ class ConfigManager {
                 ConfigProp.DATABASE_NAME -> "thorincompanies"
                 ConfigProp.DATABASE_PASSWORD -> ""
                 ConfigProp.DATE_FORMAT -> "yyyy-MM-dd"
+                ConfigProp.CURRENCY_SUFFIX -> " SEK"
             }
         }
     }

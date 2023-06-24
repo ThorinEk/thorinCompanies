@@ -24,7 +24,7 @@ object ChatUtility {
 
     fun sendMessage(player: Player, errorCode: ErrorCode) {
         val errorMessage = ErrorTranslator.getErrorMessage(errorCode)
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', errorMessage))
+        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&C$errorMessage"))
     }
 
 }

@@ -11,6 +11,8 @@ enum class MessageProp(val key: String) {
     CHAT_PREFIX("chat.prefix"),
     SPECIFY_COMP_NAME("specify_comp_name"),
     AWAITING_COMP_CREATION_CONFIRM("await_comp_creation_confirm"),
-    AWAIT_COMP_DELETION_CONFIRM("await_comp_deletion_confirm")
+    AWAIT_COMP_DELETION_CONFIRM("await_comp_deletion_confirm"),
+    COMP_LIST_ITEM("comp_list_item"),
+    COMP_LIST_TITLE("comp_list_title")
 }
 

@@ -95,7 +95,7 @@ class CompanyService {
         return companyCount >= maxCompanies
     }
 
-    private fun getCostToStartCompany(): BigDecimal {
+    fun getCostToStartCompany(): BigDecimal {
         return when (val costObject = configManager.getConfig(ConfigProp.COMPANY_STARTUP_COST)) {
             is Int -> BigDecimal.valueOf(costObject.toLong())
             is Double -> BigDecimal.valueOf(costObject)

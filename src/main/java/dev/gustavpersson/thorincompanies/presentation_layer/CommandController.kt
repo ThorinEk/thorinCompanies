@@ -67,7 +67,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
-        ChatUtility.sendMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM)
+        val startupCost = companyService.getCostToStartCompany()
+        ChatUtility.sendMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM, startupCost)
     }
 
     private fun deleteCompanyHandler(player: Player, args: Array<String>) {
@@ -86,14 +87,10 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
         val companies = companyService.findAll()
-        ChatUtility.sendMessage(player, "&2Företag:")
+        ChatUtility.sendMessage(player, MessageProp.COMP_LIST_TITLE)
         for (company in companies) {
-            ChatUtility.sendMessage(
-                player,
-                "${company.name}, " +
-                "Grundat ${company.createdAt} av " +
-                "${Bukkit.getOfflinePlayer(company.founderUUID).name }"
-            )
+            val founderName = Bukkit.getOfflinePlayer(company.founderUUID).name ?: ""
+            ChatUtility.sendMessage(player, MessageProp.COMP_LIST_ITEM, company.name, company.createdAt, founderName)
         }
     }
 
@@ -102,7 +99,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         if (confirmation != null) {
             confirmation.confirm()
         } else {
-            ChatUtility.sendMessage(player, ErrorCode.CONFIRMATION_EXPIRED)
+            ChatUtility.sendMessage(player, ErrorCode.NO_ACTIVE_CONFIRMATION)
         }
     }
 
