@@ -14,15 +14,19 @@ import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 import java.io.IOException
 import java.util.logging.Logger
+import net.kyori.adventure.platform.bukkit.BukkitAudiences
 
 class ThorinCompanies : JavaPlugin() {
 
     lateinit var messagesConfig: FileConfiguration
     private lateinit var messagesFile: File
+    private var adventure: BukkitAudiences? = null
 
     override fun onEnable() {
         try {
             instance = this
+
+            adventure = BukkitAudiences.create(this)
 
             saveDefaultConfig()
             createMessagesFile()
@@ -46,6 +50,10 @@ class ThorinCompanies : JavaPlugin() {
     override fun onDisable() {
         super.onDisable()
         // Plugin shutdown logic
+        if (adventure != null) {
+            adventure?.close()
+            adventure = null
+        }
     }
 
     private fun setupEconomy() {
@@ -102,6 +110,9 @@ class ThorinCompanies : JavaPlugin() {
 
         val pluginManager: PluginManager
             get() = instance.server.pluginManager
+
+        val adventure: BukkitAudiences?
+            get() = instance.adventure
     }
 
 }

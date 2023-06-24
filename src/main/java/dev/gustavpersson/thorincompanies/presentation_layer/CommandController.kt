@@ -68,7 +68,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
         val startupCost = companyService.getCostToStartCompany()
-        ChatUtility.sendMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM, startupCost)
+        ChatUtility.sendConfirmableMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM, startupCost)
     }
 
     private fun deleteCompanyHandler(player: Player, args: Array<String>) {
@@ -82,7 +82,8 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
         val confirmation = DeleteCompanyConfirmation(player, company.id)
         ConfirmationManager.addConfirmation(confirmation)
-        ChatUtility.sendMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM, company.name)
+        ChatUtility.sendConfirmableMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM, company.name)
+
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {

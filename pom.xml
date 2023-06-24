@@ -90,6 +90,7 @@
                                     <include>org.jetbrains.kotlin:kotlin-stdlib</include>
                                     <include>org.jetbrains.kotlin:kotlin-reflect</include>
                                     <include>org.jetbrains.exposed:*</include>
+                                    <include>net.kyori:adventure-api</include>
                                     <!-- Add here other dependencies that should be included in the final .jar -->
                                 </includes>
                             </artifactSet>
@@ -186,6 +187,12 @@
             <version>0.41.1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/net.kyori/adventure-api -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-platform-bukkit</artifactId>
+            <version>4.3.0</version>
+        </dependency>
 
 
     </dependencies>

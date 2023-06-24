@@ -54,6 +54,7 @@ class ConfigManager {
                 MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of &s. Type /com confirm to proceed."
                 MessageProp.COMP_LIST_ITEM -> "%s, founded %s by %s."
                 MessageProp.COMP_LIST_TITLE -> "Companies:"
+                MessageProp.LINE_SEPARATOR -> "&A&M                     "
             }
         }
 

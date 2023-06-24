@@ -1,5 +1,6 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.utils
 
+import dev.gustavpersson.thorincompanies.ThorinCompanies
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.presentation_layer.ErrorTranslator
@@ -25,6 +26,23 @@ object ChatUtility {
     fun sendMessage(player: Player, errorCode: ErrorCode) {
         val errorMessage = ErrorTranslator.getErrorMessage(errorCode)
         player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&C$errorMessage"))
+    }
+
+    fun sendConfirmableMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
+        val audiences = BukkitAudiences.create(ThorinCompanies.instance)
+
+        val line = Component.text(configManager.getMessage(MessageProp.LINE_SEPARATOR) as String)
+        val message = configManager.getMessage(messageProp) as String
+        val formattedMessage = Component.text(String.format(message, *values))
+            .clickEvent(ClickEvent.runCommand("/com confirm"))
+
+        val fullMessage = line
+            .append(Component.newline())
+            .append(formattedMessage)
+            .append(Component.newline())
+            .append(line)
+
+        audiences.sender(player).sendMessage(fullMessage)
     }
 
 }
