@@ -43,18 +43,18 @@ class ConfigManager {
     companion object {
         private fun getDefaultMessage(property: MessageProp): String {
             return when (property) {
-                MessageProp.COMPANY_CREATED -> "Company &B%s&R created with a startup capital of %s"
+                MessageProp.COMPANY_CREATED -> "Company <aqua>%s</aqua> created with a startup capital of %s"
                 MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
                 MessageProp.COMPANY_BALANCE -> "Company balance: %s"
                 MessageProp.EXCEPTION_OCCURRED -> "&CAn unexpected exception occurred with ThorinCompanies"
-                MessageProp.CHAT_PREFIX -> "&6[&5Companies&6]&F "
+                MessageProp.CHAT_PREFIX -> "<gold>[<dark_purple>Companies<gold>]</gold> "
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
                 MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation, costing %s. Type /com confirm to proceed"
                 MessageProp.INVALID_ARGUMENT -> "An invalid argument was specified"
                 MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of &s. Type /com confirm to proceed."
                 MessageProp.COMP_LIST_ITEM -> "%s, founded %s by %s."
                 MessageProp.COMP_LIST_TITLE -> "Companies:"
-                MessageProp.LINE_SEPARATOR -> "&A&M                     "
+                MessageProp.LINE_SEPARATOR -> "<green><strikethrough>---------------------------"
             }
         }
 
