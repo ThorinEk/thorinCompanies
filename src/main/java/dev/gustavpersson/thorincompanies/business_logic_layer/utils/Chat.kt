@@ -13,7 +13,9 @@ import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 import java.math.BigDecimal
-import java.math.RoundingMode
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import java.util.Locale
 
 object Chat {
     private val configManager by lazy { ConfigManager() }
@@ -29,6 +31,13 @@ object Chat {
         val message = configManager.getMessage(messageProp) as String
         val formattedMessage = String.format(message, *values)
         val finalMessage = miniMessage.deserialize(getPrefix() + formattedMessage)
+        player.sendMessage(finalMessage)
+    }
+
+    fun sendRawMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
+        val message = configManager.getMessage(messageProp) as String
+        val formattedMessage = String.format(message, *values)
+        val finalMessage = miniMessage.deserialize(formattedMessage)
         player.sendMessage(finalMessage)
     }
 
@@ -68,7 +77,14 @@ object Chat {
 
     fun currency(amount: BigDecimal): String {
         val currencySuffix = configManager.getConfig(ConfigProp.CURRENCY_SUFFIX)
-        val formattedAmount = amount.setScale(2, RoundingMode.HALF_EVEN)
+
+        val symbols = DecimalFormatSymbols(Locale.getDefault()).apply {
+            groupingSeparator = (configManager.getConfig(ConfigProp.GROUPING_SEPARATOR) as String).single()
+            decimalSeparator = (configManager.getConfig(ConfigProp.DECIMAL_SEPARATOR) as String).single()
+        }
+        val decimalFormat = DecimalFormat(configManager.getConfig(ConfigProp.DECIMAL_FORMAT) as String, symbols)
+        val formattedAmount = decimalFormat.format(amount)
+
         return "$formattedAmount$currencySuffix"
     }
 

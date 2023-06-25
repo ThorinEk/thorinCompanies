@@ -12,7 +12,7 @@ data class DeleteCompanyConfirmation(override val player: Player, val companyId:
     override fun confirm() {
         val company = companyService.findById(companyId) ?: throw ThorinException(ErrorCode.COMP_NAME_NOT_FOUND)
         executeConfirmation { companyService.delete(companyId, player) }
-        Chat.sendMessage(player, MessageProp.COMPANY_DELETED, company.name)
+        Chat.sendMessage(player, MessageProp.COMPANY_DELETED, company.name, company.startupCapital)
     }
 }
 

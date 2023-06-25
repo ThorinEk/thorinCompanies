@@ -19,6 +19,7 @@ object ErrorTranslator {
             ErrorCode.COMP_NAME_NOT_FOUND -> "No company with that name was found"
             ErrorCode.CONFIG_PROPERTY_WRONG_TYPE -> "The configuration property has the wrong data type"
             ErrorCode.NO_ACTIVE_CONFIRMATION -> "You have no pending action to confirm"
+            ErrorCode.COMP_ID_NOT_FOUND -> "No company with that ID could be found"
         }
     }
 }

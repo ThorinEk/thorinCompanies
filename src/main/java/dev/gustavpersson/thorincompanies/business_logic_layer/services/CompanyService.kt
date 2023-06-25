@@ -64,12 +64,14 @@ class CompanyService {
     fun delete(id: Int, performingPlayer: Player) {
 
         //Verify that player owns the company
-        val company = findById(id)
-        if (performingPlayer.uniqueId != company?.founderUUID){
+        val company = findById(id) ?: throw ThorinException(ErrorCode.COMP_ID_NOT_FOUND)
+        if (performingPlayer.uniqueId != company.founderUUID){
             throw ThorinException(ErrorCode.ONLY_FOUNDER_CAN_DELETE)
         }
 
         companyRepository.delete(id)
+
+        ThorinCompanies.economy.depositPlayer(performingPlayer, company.startupCapital.toDouble())
     }
 
     fun findById(id: Int): Company? {

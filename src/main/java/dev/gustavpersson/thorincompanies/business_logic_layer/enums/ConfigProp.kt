@@ -10,5 +10,8 @@ enum class ConfigProp(val key: String) {
     DATABASE_NAME("database.dbname"),
     DATABASE_PASSWORD("database.password"),
     DATE_FORMAT("date_format"),
-    CURRENCY_SUFFIX("currency_suffix")
+    CURRENCY_SUFFIX("currency.currency_suffix"),
+    DECIMAL_FORMAT("currency.decimal_format"),
+    DECIMAL_SEPARATOR("currency.decimal_separator"),
+    GROUPING_SEPARATOR("currency.grouping_separator")
 }

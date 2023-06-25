@@ -44,7 +44,7 @@ class ConfigManager {
         private fun getDefaultMessage(property: MessageProp): String {
             return when (property) {
                 MessageProp.COMPANY_CREATED -> "Company <aqua>%s</aqua> created with a startup capital of %s"
-                MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
+                MessageProp.COMPANY_DELETED -> "Company <aqua>%s<reset> liquidated. Starting capital of %s has been returned to your account"
                 MessageProp.COMPANY_BALANCE -> "Company balance: %s"
                 MessageProp.EXCEPTION_OCCURRED -> "An unexpected exception occurred with ThorinCompanies"
                 MessageProp.CHAT_PREFIX -> "<gold>[<dark_purple>Companies<gold>]<reset> "
@@ -69,6 +69,9 @@ class ConfigManager {
                 ConfigProp.DATABASE_PASSWORD -> ""
                 ConfigProp.DATE_FORMAT -> "yyyy-MM-dd"
                 ConfigProp.CURRENCY_SUFFIX -> " SEK"
+                ConfigProp.DECIMAL_FORMAT -> "#,##0.00"
+                ConfigProp.DECIMAL_SEPARATOR -> ","
+                ConfigProp.GROUPING_SEPARATOR -> " "
             }
         }
     }

@@ -91,7 +91,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         Chat.sendMessage(player, MessageProp.COMP_LIST_TITLE)
         for (company in companies) {
             val founderName = Bukkit.getOfflinePlayer(company.founderUUID).name ?: ""
-            Chat.sendMessage(player, MessageProp.COMP_LIST_ITEM, company.name, company.createdAt, founderName)
+            Chat.sendRawMessage(player, MessageProp.COMP_LIST_ITEM, company.name, company.createdAt, founderName)
         }
     }
 
