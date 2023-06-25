@@ -47,14 +47,14 @@ class ConfigManager {
                 MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
                 MessageProp.COMPANY_BALANCE -> "Company balance: %s"
                 MessageProp.EXCEPTION_OCCURRED -> "&CAn unexpected exception occurred with ThorinCompanies"
-                MessageProp.CHAT_PREFIX -> "<gold>[<dark_purple>Companies<gold>]</gold> "
+                MessageProp.CHAT_PREFIX -> "<gold>[<dark_purple>Companies<gold>]<reset> "
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
                 MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation, costing %s. Type /com confirm to proceed"
                 MessageProp.INVALID_ARGUMENT -> "An invalid argument was specified"
-                MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of &s. Type /com confirm to proceed."
+                MessageProp.AWAIT_COMP_DELETION_CONFIRM -> "Awaiting liquidation of %s. Type /com confirm to proceed."
                 MessageProp.COMP_LIST_ITEM -> "%s, founded %s by %s."
                 MessageProp.COMP_LIST_TITLE -> "Companies:"
-                MessageProp.LINE_SEPARATOR -> "<green><strikethrough>---------------------------"
+                MessageProp.CLICK_TO_CONFIRM_HOVER -> "Click this message to confirm the action."
             }
         }
 

@@ -6,6 +6,9 @@ import dev.gustavpersson.thorincompanies.presentation_layer.ErrorTranslator
 import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
+import net.kyori.adventure.text.event.HoverEvent
+import net.kyori.adventure.text.format.NamedTextColor
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
 
@@ -33,15 +36,27 @@ object ChatUtility {
     }
 
     fun sendConfirmableMessage(player: Player, messageProp: MessageProp, vararg values: Any) {
-
-        val line = Component.text(configManager.getMessage(MessageProp.LINE_SEPARATOR) as String)
         val message = configManager.getMessage(messageProp) as String
-        val formattedMessage = Component.text(String.format(message, *values))
-            .clickEvent(ClickEvent.runCommand("/com confirm"))
+        val formattedMessage = String.format(message, *values)
 
-        val fullMessage = line
-            .append(Component.newline())
-            .append(formattedMessage)
+        val line = Component.text()
+            .content("------------------------------")
+            .decoration(TextDecoration.STRIKETHROUGH, true)
+            .color(NamedTextColor.AQUA)
+            .build()
+
+        val interactiveMessage = Component.text(formattedMessage)
+            .clickEvent(ClickEvent.runCommand("/com confirm"))
+            .hoverEvent(HoverEvent.showText(Component.text()
+                .content("Click this message to confirm the action.")
+                .color(NamedTextColor.GREEN))
+            )
+            .color(NamedTextColor.GREEN)
+
+        val fullMessage = Component.empty()
+            .append(line)
+            .append(Component.newline()) // Reset formatting
+            .append(interactiveMessage)
             .append(Component.newline())
             .append(line)
 

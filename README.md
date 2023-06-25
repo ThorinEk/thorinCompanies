@@ -1,5 +1,5 @@
 # ThorinCompanies
-A Minecraft plugin for Spigot that introduces companies into the game.
+A Minecraft plugin for Paper that introduces companies into the game.
 
 ## Run instructions
 1. Clone the repository
@@ -8,6 +8,11 @@ A Minecraft plugin for Spigot that introduces companies into the game.
 4. Make sure you have the "Kotlin" plugin for IntelliJ so that you get syntax highlighting and analysis.
 5. IntelliJ may need to be updated to the latest version
 6. It should now be possible to generate a JAR file for the plugin using Maven, all inside IntelliJ.
+
+## Local Development Environment
+A local development environment for this plugin should include the following:
+1. A Minecraft server running a matching version of Paper.
+2. A local MySQL database, Laragon is a simple software for handling this.
 
 ## Database
 The plugin is designed exclusively for use with MySQL as this is considered a more flexible and long-term stable solution. 
