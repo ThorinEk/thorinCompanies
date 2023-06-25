@@ -89,8 +89,13 @@ class CompanyService {
         return founderBalance.toBigDecimal() > getCostToStartCompany()
     }
 
+    fun findCompaniesFoundedByPlayer(player: Player): List<Company> {
+        return companyRepository.findByFounder(player.uniqueId).map { it.toCompany() }
+    }
+
+
     private fun playerOwnsMaxCompanies(player: Player): Boolean {
-        val companyCount = companyRepository.findByFounder(player.uniqueId).size
+        val companyCount = findCompaniesFoundedByPlayer(player).size
         val maxCompanies = configManager.getConfig(ConfigProp.MAX_COMPANIES_PER_PLAYER) as Int
         return companyCount >= maxCompanies
     }

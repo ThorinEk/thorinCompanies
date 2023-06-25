@@ -6,7 +6,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.services.CompanyService
-import dev.gustavpersson.thorincompanies.business_logic_layer.utils.ChatUtility
+import dev.gustavpersson.thorincompanies.business_logic_layer.utils.Chat
 import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfirmationManager
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.CreateCompanyConfirmation
 import dev.gustavpersson.thorincompanies.presentation_layer.confirmations.DeleteCompanyConfirmation
@@ -29,10 +29,10 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
             val economy = ThorinCompanies.economy
             when {
                 args.isEmpty() -> {
-                    ChatUtility.sendMessage(sender, "Base-command for the ThorinCompanies plugin by ThorinEk")
+                    Chat.sendMessage(sender, "Base-command for the ThorinCompanies plugin by ThorinEk")
                     return true
                 }
-                args[0] == Argument.BAL.arg -> ChatUtility.sendMessage(
+                args[0] == Argument.BAL.arg -> Chat.sendMessage(
                     sender,
                     "Ditt konto: " + economy.getBalance(sender)
                 )
@@ -40,18 +40,18 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 args[0] == Argument.LIST.arg -> listCompaniesHandler(sender, args)
                 args[0] == Argument.CONFIRM.arg -> confirmHandler(sender, args)
                 args[0] == Argument.LIQUIDATE.arg -> deleteCompanyHandler(sender, args)
-                else -> ChatUtility.sendMessage(sender, MessageProp.INVALID_ARGUMENT)
+                else -> Chat.sendMessage(sender, MessageProp.INVALID_ARGUMENT)
             }
             true
         } catch (exception: Exception) {
             when (exception) {
                 is ThorinException -> {
-                    ChatUtility.sendMessage(sender, exception.code)
+                    Chat.sendMessage(sender, exception.code)
                 }
                 else -> {
                     plugin.logger.severe(exception.toString())
                     exception.printStackTrace()
-                    ChatUtility.sendMessage(sender, MessageProp.EXCEPTION_OCCURRED)
+                    Chat.sendMessage(sender, MessageProp.EXCEPTION_OCCURRED)
                 }
             }
             false
@@ -68,7 +68,7 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         val confirmation = CreateCompanyConfirmation(player, companyName)
         ConfirmationManager.addConfirmation(confirmation)
         val startupCost = companyService.getCostToStartCompany()
-        ChatUtility.sendConfirmableMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM, startupCost)
+        Chat.sendConfirmableMessage(player, MessageProp.AWAITING_COMP_CREATION_CONFIRM, Chat.currency(startupCost))
     }
 
     private fun deleteCompanyHandler(player: Player, args: Array<String>) {
@@ -82,16 +82,16 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
 
         val confirmation = DeleteCompanyConfirmation(player, company.id)
         ConfirmationManager.addConfirmation(confirmation)
-        ChatUtility.sendConfirmableMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM, company.name)
+        Chat.sendConfirmableMessage(player, MessageProp.AWAIT_COMP_DELETION_CONFIRM, company.name)
 
     }
 
     private fun listCompaniesHandler(player: Player, args: Array<String>) {
         val companies = companyService.findAll()
-        ChatUtility.sendMessage(player, MessageProp.COMP_LIST_TITLE)
+        Chat.sendMessage(player, MessageProp.COMP_LIST_TITLE)
         for (company in companies) {
             val founderName = Bukkit.getOfflinePlayer(company.founderUUID).name ?: ""
-            ChatUtility.sendMessage(player, MessageProp.COMP_LIST_ITEM, company.name, company.createdAt, founderName)
+            Chat.sendMessage(player, MessageProp.COMP_LIST_ITEM, company.name, company.createdAt, founderName)
         }
     }
 
@@ -100,17 +100,24 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
         if (confirmation != null) {
             confirmation.confirm()
         } else {
-            ChatUtility.sendMessage(player, ErrorCode.NO_ACTIVE_CONFIRMATION)
+            Chat.sendMessage(player, ErrorCode.NO_ACTIVE_CONFIRMATION)
         }
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<String>): List<String> {
-        return if (args.size == 1) {
-            listOf(
+        if (args.size == 1) {
+            return listOf(
                 Argument.CREATE.arg,
                 Argument.LIST.arg,
                 Argument.BAL.arg,
                 Argument.LIQUIDATE.arg)
-        } else emptyList()
+        } else if (args.size == 2) {
+            if (args[0] == Argument.LIQUIDATE.arg) {
+                val foundedCompanies = companyService.findCompaniesFoundedByPlayer(sender as Player)
+                return foundedCompanies.map { it.name }
+            }
+
+        }
+        return emptyList()
     }
 }

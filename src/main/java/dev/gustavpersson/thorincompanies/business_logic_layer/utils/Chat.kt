@@ -1,5 +1,6 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.utils
 
+import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ConfigProp
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.enums.MessageProp
 import dev.gustavpersson.thorincompanies.presentation_layer.ErrorTranslator
@@ -11,8 +12,10 @@ import net.kyori.adventure.text.format.NamedTextColor
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.entity.Player
+import java.math.BigDecimal
+import java.math.RoundingMode
 
-object ChatUtility {
+object Chat {
     private val configManager by lazy { ConfigManager() }
     private val miniMessage by lazy { MiniMessage.miniMessage() }
 
@@ -61,6 +64,12 @@ object ChatUtility {
             .append(line)
 
         player.sendMessage(fullMessage)
+    }
+
+    fun currency(amount: BigDecimal): String {
+        val currencySuffix = configManager.getConfig(ConfigProp.CURRENCY_SUFFIX)
+        val formattedAmount = amount.setScale(2, RoundingMode.HALF_EVEN)
+        return "$formattedAmount$currencySuffix"
     }
 
     private fun getPrefix(): String {
