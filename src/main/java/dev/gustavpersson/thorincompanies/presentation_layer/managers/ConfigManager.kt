@@ -46,7 +46,7 @@ class ConfigManager {
                 MessageProp.COMPANY_CREATED -> "Company <aqua>%s</aqua> created with a startup capital of %s"
                 MessageProp.COMPANY_DELETED -> "Company &B%s&R liquidated. Starting capital of %s has been returned to your account"
                 MessageProp.COMPANY_BALANCE -> "Company balance: %s"
-                MessageProp.EXCEPTION_OCCURRED -> "&CAn unexpected exception occurred with ThorinCompanies"
+                MessageProp.EXCEPTION_OCCURRED -> "An unexpected exception occurred with ThorinCompanies"
                 MessageProp.CHAT_PREFIX -> "<gold>[<dark_purple>Companies<gold>]<reset> "
                 MessageProp.SPECIFY_COMP_NAME -> "A name must be specified for the company"
                 MessageProp.AWAITING_COMP_CREATION_CONFIRM -> "Awaiting company creation, costing %s. Click here or type /com confirm to proceed"
