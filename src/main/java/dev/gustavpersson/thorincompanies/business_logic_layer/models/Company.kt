@@ -1,6 +1,5 @@
 package dev.gustavpersson.thorincompanies.business_logic_layer.models
 
-import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.util.*
@@ -20,7 +19,7 @@ data class NewCompany(
     val createdAt: LocalDate
 )
 
-data class UpdateCompanyRequest(
+data class RenameCompanyRequest(
     val id: Int,
     val name: String
 )

@@ -112,9 +112,13 @@ class CommandController(private val plugin: ThorinCompanies) : TabExecutor {
                 Argument.BAL.arg,
                 Argument.LIQUIDATE.arg)
         } else if (args.size == 2) {
-            if (args[0] == Argument.LIQUIDATE.arg) {
-                val foundedCompanies = companyService.findCompaniesFoundedByPlayer(sender as Player)
-                return foundedCompanies.map { it.name }
+            return when(args[0]) {
+                Argument.LIQUIDATE.arg -> {
+                    val foundedCompanies = companyService.findCompaniesFoundedByPlayer(sender as Player)
+                    foundedCompanies.map { it.name }
+                }
+                Argument.CREATE.arg -> listOf("<Company Name>")
+                else -> emptyList()
             }
 
         }

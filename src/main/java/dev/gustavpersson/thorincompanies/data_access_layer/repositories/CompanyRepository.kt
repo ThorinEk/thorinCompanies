@@ -1,7 +1,7 @@
 package dev.gustavpersson.thorincompanies.data_access_layer.repositories
 
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
-import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.RenameCompanyRequest
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompaniesTable
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -20,7 +20,7 @@ class CompanyRepository {
         }
     }
 
-    fun update(request: UpdateCompanyRequest): CompanyEntity {
+    fun update(request: RenameCompanyRequest): CompanyEntity {
         return transaction {
             val entity = CompanyEntity.findById(request.id) ?: throw Exception("Company not found")
             entity.name = request.name

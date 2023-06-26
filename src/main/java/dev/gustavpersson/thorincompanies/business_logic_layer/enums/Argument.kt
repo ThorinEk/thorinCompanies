@@ -6,5 +6,6 @@ enum class Argument(val arg: String) {
     LIQUIDATE("liquidate"),
     LIST("list"),
     BAL("bal"),
-    CONFIRM("confirm")
+    CONFIRM("confirm"),
+    RENAME("rename")
 }

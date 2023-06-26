@@ -6,7 +6,7 @@ import dev.gustavpersson.thorincompanies.business_logic_layer.enums.ErrorCode
 import dev.gustavpersson.thorincompanies.business_logic_layer.exceptions.ThorinException
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.Company
 import dev.gustavpersson.thorincompanies.business_logic_layer.models.NewCompany
-import dev.gustavpersson.thorincompanies.business_logic_layer.models.UpdateCompanyRequest
+import dev.gustavpersson.thorincompanies.business_logic_layer.models.RenameCompanyRequest
 import dev.gustavpersson.thorincompanies.data_access_layer.entities.CompanyEntity
 import dev.gustavpersson.thorincompanies.data_access_layer.repositories.CompanyRepository
 import dev.gustavpersson.thorincompanies.presentation_layer.managers.ConfigManager
@@ -51,8 +51,8 @@ class CompanyService {
         return entity.toCompany()
     }
 
-    fun update(id: Int, name: String): Company {
-        val request = UpdateCompanyRequest(id, name)
+    fun renameCompany(id: Int, name: String): Company {
+        val request = RenameCompanyRequest(id, name)
         val entity = companyRepository.update(request)
         return entity.toCompany()
     }

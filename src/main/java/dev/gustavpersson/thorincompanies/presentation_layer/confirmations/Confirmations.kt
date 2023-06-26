@@ -21,7 +21,9 @@ data class CreateCompanyConfirmation(override val player: Player, val companyNam
 
     override fun confirm() {
         executeConfirmation { companyService.create(player, companyName) }
-        Chat.sendMessage(player, MessageProp.COMPANY_CREATED, companyName)
+
+        val startupCost = companyService.getCostToStartCompany()
+        Chat.sendMessage(player, MessageProp.COMPANY_CREATED, companyName, Chat.currency(startupCost))
     }
 
 }
